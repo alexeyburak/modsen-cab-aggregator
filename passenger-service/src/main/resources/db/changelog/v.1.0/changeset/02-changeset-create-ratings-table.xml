@@ -2,15 +2,15 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="Alexey Burak" id="10">
+    <changeSet author="Alexey Burak" id="2">
         <createTable tableName="ratings">
-            <column name="id" type="bigserial">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="driver_id" type="bigint">
+            <column name="driver_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="passenger_id" type="bigint">
+            <column name="passenger_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="score" type="int">

@@ -39,7 +39,8 @@ public class PassengerController {
     private final PassengerService passengerService;
 
     @GetMapping
-    public ResponseEntity<Page<PassengerViewingDTO>> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE) @Min(1) Integer page,
+    public ResponseEntity<Page<PassengerViewingDTO>> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE)
+                                                                 @Valid @Min(1) Integer page,
                                                              @RequestParam(required = false, defaultValue = DEFAULT_SIZE) @Min(1) Integer size,
                                                              @RequestParam(required = false) Sort.Direction sortOrder,
                                                              @RequestParam(required = false) PassengerSortField sortField) {
@@ -54,7 +55,7 @@ public class PassengerController {
     }
 
     @PostMapping
-    public ResponseEntity<PassengerViewingDTO> create(@RequestBody @Valid PassengerDTO passengerDTO) {
+    public ResponseEntity<PassengerViewingDTO> save(@RequestBody @Valid PassengerDTO passengerDTO) {
         return new ResponseEntity<>(
                 passengerService.save(passengerDTO),
                 HttpStatus.CREATED

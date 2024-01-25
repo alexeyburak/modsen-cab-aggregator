@@ -4,22 +4,24 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="Alexey Burak" id="1">
         <createTable tableName="passengers">
-            <column name="id" type="bigserial">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(200)">
+            <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="surname" type="varchar(200)">
+            <column name="surname" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="email" type="varchar(200)">
+            <column name="email" type="varchar(100)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="phone" type="varchar(11)">
+            <column name="phone" type="varchar(50)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="active" type="boolean"/>
+            <column name="active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <rollback>
             <dropTable tableName="passengers"/>

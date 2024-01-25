@@ -4,9 +4,9 @@ spring:
   application:
     name: passenger-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/passengers
-    username: postgres
-    password: ${DB_PASSWORD}
+    url:
+    username:
+    password:
     dbcp2:
       driver: org.postgresql.Driver
   liquibase:

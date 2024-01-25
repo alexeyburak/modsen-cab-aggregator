@@ -33,14 +33,9 @@ public class Passenger {
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(name = "phone", nullable = false, length = 50)
+    @Column(name = "phone", nullable = false, unique = true, length = 50)
     private String phone;
 
     @Column(name = "active", nullable = false)
     private Boolean active;
-
-    public Boolean isActive() {
-        return active;
-    }
-
 }

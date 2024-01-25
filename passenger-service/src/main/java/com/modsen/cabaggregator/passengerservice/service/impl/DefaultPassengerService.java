@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -35,7 +36,7 @@ public class DefaultPassengerService implements PassengerService {
     @Override
     public Page<PassengerViewingDTO> findAll(Integer page, Integer size, PassengerSortCriteria sort) {
         return passengerRepository.findAll(
-                PageRequest.of(page, size, sort.getOrder(), sort.getField().getFiledName())
+                PageRequest.of(page, size, Sort.by(sort.getOrder(), sort.getField().getFiledName()))
         ).map(passengerMapper::toPassengerViewingDTO);
     }
 
