@@ -119,11 +119,17 @@ public class DefaultPassengerService implements PassengerService {
         throwExceptionIfPhoneExists(passengerDTO.getPhone());
     }
 
-    private Passenger findEntityById(UUID id) {
+    Passenger findEntityById(UUID id) throws PassengerNotFoundException {
         return passengerRepository.findById(id)
                 .orElseThrow(() ->
                         new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, id))
                 );
+    }
+
+    void throwExceptionIfPassengerDoesNotExist(UUID passengerId) {
+        if (!passengerRepository.existsById(passengerId)) {
+            throw new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, passengerId));
+        }
     }
 
 }

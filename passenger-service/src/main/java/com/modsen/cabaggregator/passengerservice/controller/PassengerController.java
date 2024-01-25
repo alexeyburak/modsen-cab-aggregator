@@ -6,6 +6,7 @@ import com.modsen.cabaggregator.passengerservice.dto.PassengerUpdateDTO;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerViewingDTO;
 import com.modsen.cabaggregator.passengerservice.model.enumeration.PassengerSortField;
 import com.modsen.cabaggregator.passengerservice.service.PassengerService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -38,9 +39,9 @@ public class PassengerController {
 
     private final PassengerService passengerService;
 
+    @Operation(description = "Get all passengers")
     @GetMapping
-    public ResponseEntity<Page<PassengerViewingDTO>> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE)
-                                                                 @Valid @Min(1) Integer page,
+    public ResponseEntity<Page<PassengerViewingDTO>> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE) @Min(1) Integer page,
                                                              @RequestParam(required = false, defaultValue = DEFAULT_SIZE) @Min(1) Integer size,
                                                              @RequestParam(required = false) Sort.Direction sortOrder,
                                                              @RequestParam(required = false) PassengerSortField sortField) {
@@ -54,6 +55,7 @@ public class PassengerController {
         );
     }
 
+    @Operation(description = "Add new passenger")
     @PostMapping
     public ResponseEntity<PassengerViewingDTO> save(@RequestBody @Valid PassengerDTO passengerDTO) {
         return new ResponseEntity<>(
@@ -62,12 +64,14 @@ public class PassengerController {
         );
     }
 
+    @Operation(description = "Delete passenger")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         passengerService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(description = "Get passenger by ID")
     @GetMapping("/{id}")
     public ResponseEntity<PassengerViewingDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(
@@ -75,6 +79,7 @@ public class PassengerController {
         );
     }
 
+    @Operation(description = "Update passenger by ID")
     @PutMapping("/{id}")
     public ResponseEntity<PassengerViewingDTO> updatePassenger(@PathVariable UUID id,
                                                                @RequestBody @Valid PassengerUpdateDTO passengerUpdateDTO) {

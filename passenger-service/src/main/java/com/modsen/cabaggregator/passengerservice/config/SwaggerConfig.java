@@ -21,7 +21,8 @@ import org.springframework.context.annotation.Configuration;
                 @Server(url = "http://localhost:8081/", description = "Development server")
         },
         tags = {
-                @Tag(name = "Passengers", description = "API for passengers CRUD operations")
+                @Tag(name = "Passengers", description = "API for passengers CRUD operations"),
+                @Tag(name = "Rating", description = "API for ratings CRUD operations")
         }
 )
 public class SwaggerConfig {
