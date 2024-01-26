@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class DefaultRatingService implements RatingService {
     private final RatingMapper ratingMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public RatingViewingDTO rate(RatingDTO ratingDTO, UUID passengerId) {
         final UUID ratingId = UUID.randomUUID();
         final UUID driverId = ratingDTO.getDriverId();
@@ -60,6 +62,7 @@ public class DefaultRatingService implements RatingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AverageRatingDTO getAveragePassengerRating(UUID passengerId) {
         passengerService.throwExceptionIfPassengerDoesNotExist(passengerId);
 

@@ -1,6 +1,5 @@
 package com.modsen.cabaggregator.passengerservice.dto;
 
-import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class RatingViewingDTO {
-    private Passenger passenger;
+    private PassengerViewingDTO passenger;
     private Integer score;
     private UUID driverId;
 }
