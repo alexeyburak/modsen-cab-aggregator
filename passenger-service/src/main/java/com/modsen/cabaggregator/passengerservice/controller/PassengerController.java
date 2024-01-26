@@ -9,7 +9,6 @@ import com.modsen.cabaggregator.passengerservice.service.PassengerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -34,15 +33,15 @@ import java.util.UUID;
 @Tag(name = "Passengers")
 public class PassengerController {
 
-    public static final String DEFAULT_PAGE = "1";
+    public static final String DEFAULT_PAGE = "0";
     public static final String DEFAULT_SIZE = "10";
 
     private final PassengerService passengerService;
 
     @Operation(description = "Get all passengers")
     @GetMapping
-    public ResponseEntity<Page<PassengerViewingDTO>> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE) @Min(1) Integer page,
-                                                             @RequestParam(required = false, defaultValue = DEFAULT_SIZE) @Min(1) Integer size,
+    public ResponseEntity<Page<PassengerViewingDTO>> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE) Integer page,
+                                                             @RequestParam(required = false, defaultValue = DEFAULT_SIZE) Integer size,
                                                              @RequestParam(required = false) Sort.Direction sortOrder,
                                                              @RequestParam(required = false) PassengerSortField sortField) {
         final PassengerSortCriteria sort = PassengerSortCriteria.builder()

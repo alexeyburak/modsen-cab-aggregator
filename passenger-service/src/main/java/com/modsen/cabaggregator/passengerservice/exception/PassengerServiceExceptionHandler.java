@@ -29,7 +29,7 @@ public final class PassengerServiceExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, List<String>> errors = new HashMap<>();
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();

@@ -5,6 +5,7 @@ import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerUpdateDTO;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerViewingDTO;
 import com.modsen.cabaggregator.passengerservice.exception.EmailIsAlreadyExistsException;
+import com.modsen.cabaggregator.passengerservice.exception.InvalidPageRequestException;
 import com.modsen.cabaggregator.passengerservice.exception.PassengerNotFoundException;
 import com.modsen.cabaggregator.passengerservice.exception.PhoneIsAlreadyExistsException;
 import com.modsen.cabaggregator.passengerservice.mapper.PassengerMapper;
@@ -35,8 +36,11 @@ public class DefaultPassengerService implements PassengerService {
 
     @Override
     public Page<PassengerViewingDTO> findAll(Integer page, Integer size, PassengerSortCriteria sort) {
+        validatePageRequestParameters(page, size);
+
+        Sort sortBy = Sort.by(sort.getOrder(), sort.getField().getFiledName());
         return passengerRepository.findAll(
-                PageRequest.of(page, size, Sort.by(sort.getOrder(), sort.getField().getFiledName()))
+                PageRequest.of(page, size, sortBy)
         ).map(passengerMapper::toPassengerViewingDTO);
     }
 
@@ -85,6 +89,12 @@ public class DefaultPassengerService implements PassengerService {
         return passengerMapper.toPassengerViewingDTO(
                 passengerRepository.save(passenger)
         );
+    }
+
+    private void validatePageRequestParameters(Integer page, Integer size) {
+        if (page < 0 || size < 0) {
+            throw new InvalidPageRequestException();
+        }
     }
 
     private void updatePhone(String updatedPhone, Passenger passenger) {
