@@ -31,7 +31,6 @@ public class DefaultRatingService implements RatingService {
     private final RatingMapper ratingMapper;
 
     @Override
-    @Transactional(readOnly = true)
     public RatingViewingDTO rate(RatingDTO ratingDTO, UUID passengerId) {
         final UUID ratingId = UUID.randomUUID();
         final UUID driverId = ratingDTO.getDriverId();
