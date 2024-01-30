@@ -1,0 +1,48 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Alexey Burak" id="1">
+        <createTable tableName="rides">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pick_up" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_at" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_at" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="passenger_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="driver_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="initial_cost" type="BIGINT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="final_cost" type="BIGINT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_method" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paid" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="rides"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
