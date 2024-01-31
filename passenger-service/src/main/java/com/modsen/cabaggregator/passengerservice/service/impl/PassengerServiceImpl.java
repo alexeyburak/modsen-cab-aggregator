@@ -1,9 +1,10 @@
 package com.modsen.cabaggregator.passengerservice.service.impl;
 
-import com.modsen.cabaggregator.passengerservice.dto.PassengerDTO;
+import com.modsen.cabaggregator.passengerservice.dto.AllPassengersResponse;
+import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
+import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
-import com.modsen.cabaggregator.passengerservice.dto.PassengerUpdateDTO;
-import com.modsen.cabaggregator.passengerservice.dto.PassengerViewingDTO;
+import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.exception.EmailIsAlreadyExistsException;
 import com.modsen.cabaggregator.passengerservice.exception.InvalidPageRequestException;
 import com.modsen.cabaggregator.passengerservice.exception.PassengerNotFoundException;
@@ -13,51 +14,58 @@ import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import com.modsen.cabaggregator.passengerservice.repository.PassengerRepository;
 import com.modsen.cabaggregator.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
-public class DefaultPassengerService implements PassengerService {
+public class PassengerServiceImpl implements PassengerService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultPassengerService.class);
     public static final String PASSENGER_WAS_NOT_FOUND = "Passenger with %s was not found";
 
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
 
     @Override
-    public Page<PassengerViewingDTO> findAll(Integer page, Integer size, PassengerSortCriteria sort) {
+    public AllPassengersResponse findAll(Integer page, Integer size, PassengerSortCriteria sort) {
         validatePageRequestParameters(page, size);
 
         Sort sortBy = Sort.by(sort.getOrder(), sort.getField().getFiledName());
-        return passengerRepository.findAll(
-                PageRequest.of(page, size, sortBy)
-        ).map(passengerMapper::toPassengerViewingDTO);
+        Page<Passenger> passengers = passengerRepository.findAll(PageRequest.of(page, size, sortBy));
+        return new AllPassengersResponse(
+                passengers.getContent()
+                        .stream()
+                        .map(passengerMapper::toPassengerResponse)
+                        .toList(),
+                page,
+                passengers.getTotalPages(),
+                passengers.getTotalElements()
+        );
     }
 
     @Override
-    public PassengerViewingDTO save(PassengerDTO passengerDTO) {
-        validateUniqueData(passengerDTO);
-        final UUID id = UUID.randomUUID();
+    @Transactional
+    public PassengerResponse save(CreatePassengerRequest request) {
+        validateUniqueData(request);
 
-        LOG.info("Save new passenger. ID: {}", id);
-        return passengerMapper.toPassengerViewingDTO(
+        final String email = request.getEmail().toLowerCase();
+        log.info("Save new passenger. Email: {}", email);
+        return passengerMapper.toPassengerResponse(
                 passengerRepository.save(
                         Passenger.builder()
-                                .id(id)
-                                .name(passengerDTO.getName())
-                                .surname(passengerDTO.getSurname())
-                                .email(passengerDTO.getEmail().toLowerCase())
-                                .phone(passengerDTO.getPhone())
+                                .name(request.getName())
+                                .surname(request.getSurname())
+                                .email(email)
+                                .phone(request.getPhone())
                                 .active(true)
                                 .build()
                 )
@@ -65,30 +73,46 @@ public class DefaultPassengerService implements PassengerService {
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         passengerRepository.deleteById(id);
-        LOG.info("Delete passenger. ID: {}", id);
+        log.info("Delete passenger. ID: {}", id);
     }
 
     @Override
-    public PassengerViewingDTO findById(UUID id) {
-        return passengerMapper.toPassengerViewingDTO(
+    public PassengerResponse findById(UUID id) {
+        return passengerMapper.toPassengerResponse(
                 findEntityById(id)
         );
     }
 
     @Override
-    public PassengerViewingDTO update(UUID id, PassengerUpdateDTO passengerDTO) {
+    @Transactional
+    public PassengerResponse update(UUID id, UpdatePassengerRequest request) {
         Passenger passenger = findEntityById(id);
 
-        passenger.setName(passengerDTO.getName());
-        passenger.setSurname(passengerDTO.getSurname());
-        updatePhone(passengerDTO.getPhone(), passenger);
-        updateEmail(passengerDTO.getEmail(), passenger);
+        passenger.setName(request.getName());
+        passenger.setSurname(request.getSurname());
+        updatePhone(request.getPhone(), passenger);
+        updateEmail(request.getEmail(), passenger);
 
-        return passengerMapper.toPassengerViewingDTO(
+        log.info("Update passenger. ID: {}", id);
+        return passengerMapper.toPassengerResponse(
                 passengerRepository.save(passenger)
         );
+    }
+
+    @Override
+    public Passenger findEntityById(UUID id) throws PassengerNotFoundException {
+        return passengerRepository.findById(id)
+                .orElseThrow(() -> new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, id)));
+    }
+
+    @Override
+    public void throwExceptionIfPassengerDoesNotExist(UUID passengerId) throws PassengerNotFoundException {
+        if (!passengerRepository.existsById(passengerId)) {
+            throw new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, passengerId));
+        }
     }
 
     private void validatePageRequestParameters(Integer page, Integer size) {
@@ -124,22 +148,9 @@ public class DefaultPassengerService implements PassengerService {
         }
     }
 
-    private void validateUniqueData(PassengerDTO passengerDTO) {
-        throwExceptionIfEmailExists(passengerDTO.getEmail());
-        throwExceptionIfPhoneExists(passengerDTO.getPhone());
-    }
-
-    Passenger findEntityById(UUID id) throws PassengerNotFoundException {
-        return passengerRepository.findById(id)
-                .orElseThrow(() ->
-                        new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, id))
-                );
-    }
-
-    void throwExceptionIfPassengerDoesNotExist(UUID passengerId) {
-        if (!passengerRepository.existsById(passengerId)) {
-            throw new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, passengerId));
-        }
+    private void validateUniqueData(CreatePassengerRequest request) {
+        throwExceptionIfEmailExists(request.getEmail());
+        throwExceptionIfPhoneExists(request.getPhone());
     }
 
 }

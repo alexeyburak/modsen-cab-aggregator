@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AverageRatingDTO {
-    private Double averageValue;
+public class AllRatingsResponse {
+    List<RatingResponse> ratings;
 }

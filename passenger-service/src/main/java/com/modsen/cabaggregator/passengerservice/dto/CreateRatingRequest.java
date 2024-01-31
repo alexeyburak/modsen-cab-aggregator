@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RatingDTO {
+public class CreateRatingRequest {
     @NotNull(message = "{score.invalid.empty}")
     @Min(value = 1, message = "{score.invalid.min}")
     @Max(value = 5, message = "{score.invalid.max}")

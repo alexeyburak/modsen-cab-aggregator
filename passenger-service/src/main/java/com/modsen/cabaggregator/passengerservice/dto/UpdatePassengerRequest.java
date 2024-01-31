@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.passengerservice.dto;
 
+import com.modsen.cabaggregator.passengerservice.util.Constants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PassengerUpdateDTO {
+public class UpdatePassengerRequest {
     @NotBlank(message = "{name.invalid.empty}")
     private String name;
 
@@ -26,7 +27,7 @@ public class PassengerUpdateDTO {
     private String email;
 
     @Schema(example = "80291112233")
-    @Pattern(regexp = "^(80(29|44|33|25)\\d{7})$", message = "{phone.invalid.pattern}")
+    @Pattern(regexp = Constants.PHONE_REGEXP, message = "{phone.invalid.pattern}")
     @NotBlank(message = "{phone.invalid.empty}")
     private String phone;
 }

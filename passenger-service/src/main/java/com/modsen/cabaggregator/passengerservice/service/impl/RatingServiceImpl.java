@@ -1,17 +1,18 @@
 package com.modsen.cabaggregator.passengerservice.service.impl;
 
-import com.modsen.cabaggregator.passengerservice.dto.AverageRatingDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingListDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingViewingDTO;
+import com.modsen.cabaggregator.passengerservice.dto.AllRatingsResponse;
+import com.modsen.cabaggregator.passengerservice.dto.AverageRatingResponse;
+import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
+import com.modsen.cabaggregator.passengerservice.dto.RatingResponse;
 import com.modsen.cabaggregator.passengerservice.mapper.RatingMapper;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import com.modsen.cabaggregator.passengerservice.model.Rating;
 import com.modsen.cabaggregator.passengerservice.repository.RatingRepository;
+import com.modsen.cabaggregator.passengerservice.service.PassengerService;
 import com.modsen.cabaggregator.passengerservice.service.RatingService;
+import com.modsen.cabaggregator.passengerservice.util.Constants;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,30 +20,26 @@ import java.text.DecimalFormat;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
-public class DefaultRatingService implements RatingService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultRatingService.class);
-    public static final int DEFAULT_SCORE = 5;
-    public static final String DECIMAL_FORMAT_PATTERN = "#.#";
+public class RatingServiceImpl implements RatingService {
 
     private final RatingRepository ratingRepository;
-    private final DefaultPassengerService passengerService;
+    private final PassengerService passengerService;
     private final RatingMapper ratingMapper;
 
     @Override
-    public RatingViewingDTO rate(RatingDTO ratingDTO, UUID passengerId) {
-        final UUID ratingId = UUID.randomUUID();
-        final UUID driverId = ratingDTO.getDriverId();
+    @Transactional
+    public RatingResponse rate(CreateRatingRequest request, UUID passengerId) {
+        final UUID driverId = request.getDriverId();
         Passenger passenger = passengerService.findEntityById(passengerId);
 
-        LOG.info("Save new rating. ID: {}, Driver ID: {}, Passenger ID: {}", ratingId, driverId, passengerId);
-        return ratingMapper.toRatingViewingDTO(
+        log.info("Save new rating. Driver ID: {}, Passenger ID: {}", driverId, passengerId);
+        return ratingMapper.toRatingResponse(
                 ratingRepository.save(
                         Rating.builder()
-                                .id(ratingId)
                                 .passenger(passenger)
-                                .score(ratingDTO.getScore())
+                                .score(request.getScore())
                                 .driverId(driverId)
                                 .build()
                 )
@@ -50,32 +47,32 @@ public class DefaultRatingService implements RatingService {
     }
 
     @Override
-    public RatingListDTO getRatingsByPassengerId(UUID passengerId) {
-        LOG.debug("Get rating by passenger ID: {}", passengerId);
-        return new RatingListDTO(
+    public AllRatingsResponse getRatingsByPassengerId(UUID passengerId) {
+        log.debug("Get rating by passenger ID: {}", passengerId);
+        return new AllRatingsResponse(
                 ratingRepository.findRatingsByPassengerId(passengerId)
                         .stream()
-                        .map(ratingMapper::toRatingViewingDTO)
+                        .map(ratingMapper::toRatingResponse)
                         .toList()
         );
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AverageRatingDTO getAveragePassengerRating(UUID passengerId) {
+    public AverageRatingResponse getAveragePassengerRating(UUID passengerId) {
         passengerService.throwExceptionIfPassengerDoesNotExist(passengerId);
 
         double averageRating = Double.parseDouble(
-                new DecimalFormat(DECIMAL_FORMAT_PATTERN)
+                new DecimalFormat(Constants.DECIMAL_FORMAT_PATTERN)
                         .format(ratingRepository.findRatingsByPassengerId(passengerId)
                                 .stream()
                                 .mapToDouble(Rating::getScore)
                                 .average()
-                                .orElse(DEFAULT_SCORE)
+                                .orElse(Constants.DEFAULT_SCORE)
                         )
         );
-        LOG.debug("Calculate average passenger rating. ID: {}", passengerId);
-        return new AverageRatingDTO(averageRating);
+        log.debug("Calculate average passenger rating. ID: {}", passengerId);
+        return new AverageRatingResponse(averageRating);
     }
 
 }

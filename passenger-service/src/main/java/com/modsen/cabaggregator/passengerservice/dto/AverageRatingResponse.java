@@ -5,14 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RatingViewingDTO {
-    private PassengerViewingDTO passenger;
-    private Integer score;
-    private UUID driverId;
+public class AverageRatingResponse {
+    private Double averageValue;
 }

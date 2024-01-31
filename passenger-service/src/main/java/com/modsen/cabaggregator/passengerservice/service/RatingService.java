@@ -1,14 +1,16 @@
 package com.modsen.cabaggregator.passengerservice.service;
 
-import com.modsen.cabaggregator.passengerservice.dto.AverageRatingDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingListDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingViewingDTO;
+import com.modsen.cabaggregator.passengerservice.dto.AverageRatingResponse;
+import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
+import com.modsen.cabaggregator.passengerservice.dto.AllRatingsResponse;
+import com.modsen.cabaggregator.passengerservice.dto.RatingResponse;
 
 import java.util.UUID;
 
 public interface RatingService {
-    RatingViewingDTO rate(RatingDTO ratingDTO, UUID passengerId);
-    RatingListDTO getRatingsByPassengerId(UUID passengerId);
-    AverageRatingDTO getAveragePassengerRating(UUID passengerId);
+    RatingResponse rate(CreateRatingRequest createRatingRequest, UUID passengerId);
+
+    AllRatingsResponse getRatingsByPassengerId(UUID passengerId);
+
+    AverageRatingResponse getAveragePassengerRating(UUID passengerId);
 }

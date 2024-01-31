@@ -1,13 +1,12 @@
 package com.modsen.cabaggregator.passengerservice.exception;
 
 import com.modsen.cabaggregator.passengerservice.dto.ErrorResponse;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@ControllerAdvice
+@RestControllerAdvice
 public final class PassengerServiceExceptionHandler {
 
     @ExceptionHandler(PassengerServiceGlobalException.class)
@@ -36,17 +35,15 @@ public final class PassengerServiceExceptionHandler {
         for (FieldError fieldError : fieldErrors) {
             String field = fieldError.getField();
 
-            if (errors.containsKey(field)) {
-                List<String> errorMessages = errors.get(field);
-                errorMessages.add(fieldError.getDefaultMessage());
-                errors.put(fieldError.getField(), errorMessages);
-            } else {
-                errors.put(fieldError.getField(), new ArrayList<>(
-                        List.of(Objects.requireNonNull(fieldError.getDefaultMessage())))
-                );
-            }
+            errors.compute(field, (key, value) -> {
+                if (Objects.nonNull(value)) {
+                    value.add(fieldError.getDefaultMessage());
+                    return value;
+                }
+                return new ArrayList<>(List.of(Objects.requireNonNull(fieldError.getDefaultMessage())));
+            });
         }
-        return new ResponseEntity<>(errors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
 }

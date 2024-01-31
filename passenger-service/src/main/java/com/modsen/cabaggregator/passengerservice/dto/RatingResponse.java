@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RatingListDTO {
-    List<RatingViewingDTO> ratings;
+public class RatingResponse {
+    private PassengerResponse passenger;
+    private Integer score;
+    private UUID driverId;
 }

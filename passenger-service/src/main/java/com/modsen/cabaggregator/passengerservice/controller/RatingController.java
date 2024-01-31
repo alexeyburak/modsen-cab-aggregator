@@ -1,9 +1,9 @@
 package com.modsen.cabaggregator.passengerservice.controller;
 
-import com.modsen.cabaggregator.passengerservice.dto.AverageRatingDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingListDTO;
-import com.modsen.cabaggregator.passengerservice.dto.RatingViewingDTO;
+import com.modsen.cabaggregator.passengerservice.dto.AllRatingsResponse;
+import com.modsen.cabaggregator.passengerservice.dto.AverageRatingResponse;
+import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
+import com.modsen.cabaggregator.passengerservice.dto.RatingResponse;
 import com.modsen.cabaggregator.passengerservice.service.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,16 +29,16 @@ public class RatingController {
 
     @Operation(description = "Rate passenger by ID")
     @PostMapping
-    public ResponseEntity<RatingViewingDTO> rate(@Valid @RequestBody RatingDTO ratingDTO,
-                                                 @PathVariable UUID id) {
+    public ResponseEntity<RatingResponse> rate(@Valid @RequestBody CreateRatingRequest request,
+                                               @PathVariable UUID id) {
         return ResponseEntity.ok(
-                ratingService.rate(ratingDTO, id)
+                ratingService.rate(request, id)
         );
     }
 
     @Operation(description = "Get all passengers ratings by ID")
     @GetMapping
-    public ResponseEntity<RatingListDTO> getRatingsByPassengerId(@PathVariable UUID id) {
+    public ResponseEntity<AllRatingsResponse> getRatingsByPassengerId(@PathVariable UUID id) {
         return ResponseEntity.ok(
                 ratingService.getRatingsByPassengerId(id)
         );
@@ -46,7 +46,7 @@ public class RatingController {
 
     @Operation(description = "Get passenger average rating by ID")
     @GetMapping("/average")
-    public ResponseEntity<AverageRatingDTO> getAverageRating(@PathVariable UUID id) {
+    public ResponseEntity<AverageRatingResponse> getAverageRating(@PathVariable UUID id) {
         return ResponseEntity.ok(
                 ratingService.getAveragePassengerRating(id)
         );

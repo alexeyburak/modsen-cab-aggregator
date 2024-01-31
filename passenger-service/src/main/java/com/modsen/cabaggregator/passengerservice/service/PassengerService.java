@@ -1,18 +1,27 @@
 package com.modsen.cabaggregator.passengerservice.service;
 
-import com.modsen.cabaggregator.passengerservice.dto.PassengerDTO;
+import com.modsen.cabaggregator.passengerservice.dto.AllPassengersResponse;
+import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
-import com.modsen.cabaggregator.passengerservice.dto.PassengerUpdateDTO;
-import com.modsen.cabaggregator.passengerservice.dto.PassengerViewingDTO;
+import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
+import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.exception.PassengerNotFoundException;
-import org.springframework.data.domain.Page;
+import com.modsen.cabaggregator.passengerservice.model.Passenger;
 
 import java.util.UUID;
 
 public interface PassengerService {
-    Page<PassengerViewingDTO> findAll(Integer page, Integer size, PassengerSortCriteria sort);
-    PassengerViewingDTO save(PassengerDTO passengerDTO);
+    AllPassengersResponse findAll(Integer page, Integer size, PassengerSortCriteria sort);
+
+    PassengerResponse save(CreatePassengerRequest passengerDTO);
+
     void delete(UUID id);
-    PassengerViewingDTO findById(UUID id) throws PassengerNotFoundException;
-    PassengerViewingDTO update(UUID id, PassengerUpdateDTO passengerUpdateDTO) throws PassengerNotFoundException;
+
+    PassengerResponse findById(UUID id) throws PassengerNotFoundException;
+
+    PassengerResponse update(UUID id, UpdatePassengerRequest updatePassengerRequest) throws PassengerNotFoundException;
+
+    Passenger findEntityById(UUID id) throws PassengerNotFoundException;
+
+    void throwExceptionIfPassengerDoesNotExist(UUID passengerId) throws PassengerNotFoundException;
 }
