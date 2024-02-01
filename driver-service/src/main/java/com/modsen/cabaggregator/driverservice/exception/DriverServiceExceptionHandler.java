@@ -1,7 +1,6 @@
 package com.modsen.cabaggregator.driverservice.exception;
 
 import com.modsen.cabaggregator.driverservice.dto.ErrorResponse;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -33,7 +32,7 @@ public class DriverServiceExceptionHandler {
         Map<String, List<String>> errors = new HashMap<>();
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
+        fieldErrors.forEach(fieldError -> {
             String field = fieldError.getField();
 
             errors.compute(field, (key, value) -> {
@@ -43,7 +42,7 @@ public class DriverServiceExceptionHandler {
                 }
                 return new ArrayList<>(List.of(Objects.requireNonNull(fieldError.getDefaultMessage())));
             });
-        }
+        });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 

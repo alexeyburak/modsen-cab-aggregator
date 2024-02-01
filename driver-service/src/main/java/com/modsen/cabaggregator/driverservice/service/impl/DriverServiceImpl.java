@@ -85,13 +85,11 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public DriverResponse update(UUID id, UpdateDriverRequest driverDTO) {
+    public DriverResponse update(UUID id, UpdateDriverRequest request) {
         Driver driver = findEntityById(id);
 
-        driver.setName(driverDTO.getName());
-        driver.setSurname(driverDTO.getSurname());
-        driver.setStatus(driverDTO.getStatus());
-        updatePhone(driverDTO.getPhone(), driver);
+        updateDriverInfo(request, driver);
+        updatePhone(request.getPhone(), driver);
 
         log.info("Update driver. ID {}", id);
         return driverMapper.toDriverResponse(
@@ -116,6 +114,12 @@ public class DriverServiceImpl implements DriverService {
         if (page < 0 || size < 0) {
             throw new InvalidPageRequestException();
         }
+    }
+
+    private void updateDriverInfo(UpdateDriverRequest request, Driver driver) {
+        driver.setName(request.getName());
+        driver.setSurname(request.getSurname());
+        driver.setStatus(request.getStatus());
     }
 
     private void updatePhone(String updatedPhone, Driver driver) {
