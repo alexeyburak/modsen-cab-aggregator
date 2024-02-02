@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.driverservice.dto;
 
+import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.driverservice.model.enumeration.DriverStatus;
 import com.modsen.cabaggregator.driverservice.util.Constants;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,7 +23,7 @@ public class UpdateDriverRequest {
     private String surname;
 
     @Schema(example = "80291112233")
-    @Pattern(regexp = Constants.PHONE_REGEXP, message = "{phone.invalid.pattern}")
+    @Pattern(regexp = GlobalConstants.PHONE_REGEXP, message = "{phone.invalid.pattern}")
     @NotBlank(message = "{phone.invalid.empty}")
     private String phone;
     private DriverStatus status;

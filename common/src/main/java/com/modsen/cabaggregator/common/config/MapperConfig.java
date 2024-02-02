@@ -1,4 +1,4 @@
-package com.modsen.cabaggregator.driverservice.config;
+package com.modsen.cabaggregator.common.config;
 
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;

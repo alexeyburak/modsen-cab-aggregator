@@ -22,7 +22,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Constants.RATINGS_ENDPOINT)
-@Tag(name = "Ratings")
+@Tag(name = Constants.RATINGS)
 public class RatingController {
 
     private final RatingService ratingService;

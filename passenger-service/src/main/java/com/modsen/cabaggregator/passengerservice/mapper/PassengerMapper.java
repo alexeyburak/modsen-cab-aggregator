@@ -1,6 +1,6 @@
 package com.modsen.cabaggregator.passengerservice.mapper;
 
-import com.modsen.cabaggregator.passengerservice.config.MapperConfig;
+import com.modsen.cabaggregator.common.config.MapperConfig;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import org.mapstruct.Mapper;

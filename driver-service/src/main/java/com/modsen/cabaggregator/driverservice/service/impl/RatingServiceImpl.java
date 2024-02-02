@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.driverservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.driverservice.dto.AllRatingsResponse;
 import com.modsen.cabaggregator.driverservice.dto.AverageRatingResponse;
 import com.modsen.cabaggregator.driverservice.dto.CreateRatingRequest;
@@ -63,12 +64,12 @@ public class RatingServiceImpl implements RatingService {
         driverService.throwExceptionIfDriverDoesNotExist(driverId);
 
         double averageRating = Double.parseDouble(
-                new DecimalFormat(Constants.DECIMAL_FORMAT_PATTERN)
+                new DecimalFormat(GlobalConstants.DECIMAL_FORMAT_PATTERN)
                         .format(ratingRepository.findRatingsByDriverId(driverId)
                                 .stream()
                                 .mapToDouble(Rating::getScore)
                                 .average()
-                                .orElse(Constants.DEFAULT_SCORE)
+                                .orElse(GlobalConstants.DEFAULT_SCORE)
                         )
         );
         log.debug("Calculate average driver rating. ID: {}", driverId);
