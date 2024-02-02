@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>driver-service</module>
         <module>passenger-service</module>
     </modules>
 
