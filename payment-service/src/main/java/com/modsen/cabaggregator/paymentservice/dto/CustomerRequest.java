@@ -18,20 +18,20 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CustomerRequest {
-    @NotBlank(message = "Name can't be empty")
+    @NotBlank(message = "{customer.name.invalid.empty}")
     private String name;
 
-    @Email(message = "Email is not valid")
-    @NotBlank(message = "Email can't be empty")
+    @Email(message = "{customer.email.invalid.pattern}")
+    @NotBlank(message = "{customer.email.invalid.empty}")
     private String email;
 
-    @Pattern(regexp = GlobalConstants.PHONE_REGEXP)
-    @NotBlank(message = "Phone can't be empty")
+    @Pattern(regexp = GlobalConstants.PHONE_REGEXP, message = "{customer.phone.invalid.pattern}")
+    @NotBlank(message = "{customer.phone.invalid.empty}")
     private String phone;
 
-    @NotNull(message = "Passenger can't be empty")
+    @NotNull(message = "{customer.passengerId.invalid.empty}")
     private UUID passengerId;
 
-    @NotNull(message = "Balance can't be empty")
+    @NotNull(message = "{customer.balance.invalid.empty}")
     private BigDecimal balance;
 }

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Constants.PAYMENTS_ENDPOINT)
@@ -48,7 +50,7 @@ public class PaymentController {
     }
 
     @GetMapping("/customers/{id}")
-    public CustomerResponse findCustomer(@PathVariable Long id) {
+    public CustomerResponse findCustomer(@PathVariable UUID id) {
         return paymentService.retrieveCustomer(id);
     }
 

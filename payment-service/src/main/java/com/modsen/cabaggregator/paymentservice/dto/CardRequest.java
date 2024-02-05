@@ -13,16 +13,16 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Builder
 public class CardRequest {
-    @NotBlank(message = "Card number can't be empty")
+    @NotBlank(message = "{card.number.invalid.empty}")
     private String cardNumber;
 
-    @NotNull(message = "Expiration month can't be empty")
+    @NotNull(message = "{card.expMonth.invalid.empty}")
     private int expMonth;
 
-    @NotNull(message = "Expiration year can't be empty")
+    @NotNull(message = "{card.expYear.invalid.empty}")
     private int expYear;
 
-    @NotBlank(message = "Cvc can't be empty")
-    @Length(max = 3,message = "Max length is 3")
+    @NotBlank(message = "{card.cvc.invalid.empty}")
+    @Length(max = 3, message = "{card.cvc.invalid.length}")
     private String cvc;
 }

@@ -1,17 +1,12 @@
 package com.modsen.cabaggregator.paymentservice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class CustomerResponse {
-    private String id;
-    private String email;
-    private String phone;
-    private String name;
+public record CustomerResponse(
+        String id,
+        String email,
+        String phone,
+        String name
+) {
 }

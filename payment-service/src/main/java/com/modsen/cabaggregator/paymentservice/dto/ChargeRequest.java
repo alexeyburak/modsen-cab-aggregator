@@ -14,9 +14,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ChargeRequest {
-    @NotNull(message = "Amount can't be null")
+    @NotNull(message = "{charge.amount.invalid.empty}")
     private BigDecimal amount;
 
-    @NotBlank(message = "Token can't be null")
+    @NotBlank(message = "{charge.token.invalid.empty}")
     private String cardToken;
 }

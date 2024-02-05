@@ -1,18 +1,11 @@
 package com.modsen.cabaggregator.paymentservice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ChargeResponse {
-    private UUID id;
-    private String currency;
-    private Double amount;
+public record ChargeResponse(
+        String id,
+        String currency,
+        long amount
+) {
 }

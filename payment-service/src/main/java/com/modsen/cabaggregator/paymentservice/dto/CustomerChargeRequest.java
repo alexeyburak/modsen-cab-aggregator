@@ -14,9 +14,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CustomerChargeRequest {
-    @NotNull(message = "")
+    @NotNull(message = "{charge.amount.invalid.empty}")
     private BigDecimal amount;
 
-    @NotNull(message = "")
+    @NotNull(message = "{charge.id.invalid.empty}")
     private UUID passengerId;
 }

@@ -10,6 +10,8 @@ import com.modsen.cabaggregator.paymentservice.dto.CustomerResponse;
 import com.modsen.cabaggregator.paymentservice.dto.MessageResponse;
 import com.modsen.cabaggregator.paymentservice.dto.TokenResponse;
 
+import java.util.UUID;
+
 public interface PaymentService {
     MessageResponse charge(ChargeRequest request);
 
@@ -17,9 +19,11 @@ public interface PaymentService {
 
     CustomerResponse createCustomer(CustomerRequest request);
 
-    CustomerResponse retrieveCustomer(Long id);
+    CustomerResponse retrieveCustomer(UUID id);
 
     BalanceResponse getBalance();
 
     ChargeResponse chargeFromCustomer(CustomerChargeRequest request);
+
+    void createPaymentMethod(String customerId);
 }
