@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Constants.PAYMENTS_ENDPOINT)
-@Tag(name = "Payments")
+@Tag(name = Constants.PAYMENTS)
 public class PaymentController {
 
     private final PaymentService paymentService;
