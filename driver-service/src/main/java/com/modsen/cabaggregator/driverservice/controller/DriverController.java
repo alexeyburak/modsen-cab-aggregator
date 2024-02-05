@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.driverservice.controller;
 
+import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.driverservice.dto.AllDriversResponse;
 import com.modsen.cabaggregator.driverservice.dto.CreateDriverRequest;
 import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
@@ -31,18 +32,15 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(Constants.DRIVERS_ENDPOINT)
-@Tag(name = "Drivers")
+@Tag(name = Constants.DRIVERS)
 public class DriverController {
-
-    public static final String DEFAULT_PAGE = "0";
-    public static final String DEFAULT_SIZE = "10";
 
     private final DriverService driverService;
 
     @Operation(description = "Get all drivers")
     @GetMapping
-    public AllDriversResponse findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE) Integer page,
-                                      @RequestParam(required = false, defaultValue = DEFAULT_SIZE) Integer size,
+    public AllDriversResponse findAll(@RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_PAGE) Integer page,
+                                      @RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_SIZE) Integer size,
                                       @RequestParam(required = false) Sort.Direction sortOrder,
                                       @RequestParam(required = false) DriverSortField sortField) {
         final DriverSortCriteria sort = DriverSortCriteria.builder()

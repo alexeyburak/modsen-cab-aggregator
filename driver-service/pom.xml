@@ -84,6 +84,13 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+
+        <!--        COMMON LIB-->
+        <dependency>
+            <groupId>com.modsen</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

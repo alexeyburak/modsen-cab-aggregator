@@ -1,12 +1,12 @@
 package com.modsen.cabaggregator.driverservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.PageRequestValidator;
 import com.modsen.cabaggregator.driverservice.dto.AllDriversResponse;
 import com.modsen.cabaggregator.driverservice.dto.CreateDriverRequest;
 import com.modsen.cabaggregator.driverservice.dto.DriverSortCriteria;
 import com.modsen.cabaggregator.driverservice.dto.UpdateDriverRequest;
 import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
 import com.modsen.cabaggregator.driverservice.exception.DriverNotFoundException;
-import com.modsen.cabaggregator.driverservice.exception.InvalidPageRequestException;
 import com.modsen.cabaggregator.driverservice.exception.PhoneIsAlreadyExistsException;
 import com.modsen.cabaggregator.driverservice.mapper.DriverMapper;
 import com.modsen.cabaggregator.driverservice.model.Driver;
@@ -34,7 +34,7 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public AllDriversResponse findAll(Integer page, Integer size, DriverSortCriteria sort) {
-        validatePageRequestParameters(page, size);
+        PageRequestValidator.validatePageRequestParameters(page, size);
 
         Sort sortBy = Sort.by(sort.getOrder(), sort.getField().getFieldName());
         Page<Driver> drivers = driverRepository.findAll(PageRequest.of(page, size, sortBy));
@@ -107,12 +107,6 @@ public class DriverServiceImpl implements DriverService {
     public void throwExceptionIfDriverDoesNotExist(UUID driverId) throws DriverNotFoundException {
         if (!driverRepository.existsById(driverId)) {
             throw new DriverNotFoundException(driverId);
-        }
-    }
-
-    private void validatePageRequestParameters(Integer page, Integer size) throws InvalidPageRequestException {
-        if (page < 0 || size < 0) {
-            throw new InvalidPageRequestException();
         }
     }
 

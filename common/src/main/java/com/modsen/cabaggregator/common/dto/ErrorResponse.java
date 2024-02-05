@@ -1,4 +1,4 @@
-package com.modsen.cabaggregator.driverservice.dto;
+package com.modsen.cabaggregator.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

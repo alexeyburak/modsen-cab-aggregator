@@ -1,6 +1,6 @@
 package com.modsen.cabaggregator.driverservice.mapper;
 
-import com.modsen.cabaggregator.driverservice.config.MapperConfig;
+import com.modsen.cabaggregator.common.config.MapperConfig;
 import com.modsen.cabaggregator.driverservice.dto.RatingResponse;
 import com.modsen.cabaggregator.driverservice.model.Rating;
 import org.mapstruct.Mapper;

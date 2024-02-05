@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.passengerservice.config;
 
+import com.modsen.cabaggregator.passengerservice.util.Constants;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -21,8 +22,8 @@ import org.springframework.context.annotation.Configuration;
                 @Server(url = "http://localhost:8081/", description = "Development server")
         },
         tags = {
-                @Tag(name = "Passengers", description = "API for passengers CRUD operations"),
-                @Tag(name = "Rating", description = "API for ratings CRUD operations")
+                @Tag(name = Constants.PASSENGERS, description = "API for passengers CRUD operations"),
+                @Tag(name = Constants.RATINGS, description = "API for ratings CRUD operations")
         }
 )
 public class SwaggerConfig {
