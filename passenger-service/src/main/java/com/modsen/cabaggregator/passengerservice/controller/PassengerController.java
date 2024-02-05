@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.passengerservice.controller;
 
+import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.passengerservice.dto.AllPassengersResponse;
 import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
@@ -7,6 +8,7 @@ import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
 import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.model.enumeration.PassengerSortField;
 import com.modsen.cabaggregator.passengerservice.service.PassengerService;
+import com.modsen.cabaggregator.passengerservice.util.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,19 +32,16 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/passengers")
-@Tag(name = "Passengers")
+@RequestMapping(Constants.PASSENGERS_ENDPOINT)
+@Tag(name = Constants.PASSENGERS)
 public class PassengerController {
-
-    public static final String DEFAULT_PAGE = "0";
-    public static final String DEFAULT_SIZE = "10";
 
     private final PassengerService passengerService;
 
     @Operation(description = "Get all passengers")
     @GetMapping
-    public ResponseEntity<AllPassengersResponse> findAll(@RequestParam(required = false, defaultValue = DEFAULT_PAGE) Integer page,
-                                                         @RequestParam(required = false, defaultValue = DEFAULT_SIZE) Integer size,
+    public ResponseEntity<AllPassengersResponse> findAll(@RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_PAGE) Integer page,
+                                                         @RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_SIZE) Integer size,
                                                          @RequestParam(required = false) Sort.Direction sortOrder,
                                                          @RequestParam(required = false) PassengerSortField sortField) {
         final PassengerSortCriteria sort = PassengerSortCriteria.builder()
