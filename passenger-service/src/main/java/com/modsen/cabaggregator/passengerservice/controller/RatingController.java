@@ -5,6 +5,7 @@ import com.modsen.cabaggregator.passengerservice.dto.AverageRatingResponse;
 import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
 import com.modsen.cabaggregator.passengerservice.dto.RatingResponse;
 import com.modsen.cabaggregator.passengerservice.service.RatingService;
+import com.modsen.cabaggregator.passengerservice.util.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,8 +22,8 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/passengers/{id}/rating")
-@Tag(name = "Ratings")
+@RequestMapping(Constants.RATINGS_ENDPOINT)
+@Tag(name = Constants.RATINGS)
 public class RatingController {
 
     private final RatingService ratingService;

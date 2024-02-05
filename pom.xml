@@ -11,6 +11,8 @@
 
     <modules>
         <module>ride-service</module>
+        <module>common</module>
+        <module>driver-service</module>
         <module>passenger-service</module>
     </modules>
 

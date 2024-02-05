@@ -1,4 +1,4 @@
-package com.modsen.cabaggregator.passengerservice.config;
+package com.modsen.cabaggregator.common.config;
 
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
@@ -11,5 +11,5 @@ import org.mapstruct.ReportingPolicy;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.ERROR
 )
-public interface MapperConfig {
+public class MapperConfig {
 }

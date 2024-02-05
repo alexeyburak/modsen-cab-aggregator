@@ -1,12 +1,12 @@
 package com.modsen.cabaggregator.passengerservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.PageRequestValidator;
 import com.modsen.cabaggregator.passengerservice.dto.AllPassengersResponse;
 import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
 import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.exception.EmailIsAlreadyExistsException;
-import com.modsen.cabaggregator.passengerservice.exception.InvalidPageRequestException;
 import com.modsen.cabaggregator.passengerservice.exception.PassengerNotFoundException;
 import com.modsen.cabaggregator.passengerservice.exception.PhoneIsAlreadyExistsException;
 import com.modsen.cabaggregator.passengerservice.mapper.PassengerMapper;
@@ -37,7 +37,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public AllPassengersResponse findAll(Integer page, Integer size, PassengerSortCriteria sort) {
-        validatePageRequestParameters(page, size);
+        PageRequestValidator.validatePageRequestParameters(page, size);
 
         Sort sortBy = Sort.by(sort.getOrder(), sort.getField().getFiledName());
         Page<Passenger> passengers = passengerRepository.findAll(PageRequest.of(page, size, sortBy));
@@ -112,12 +112,6 @@ public class PassengerServiceImpl implements PassengerService {
     public void throwExceptionIfPassengerDoesNotExist(UUID passengerId) throws PassengerNotFoundException {
         if (!passengerRepository.existsById(passengerId)) {
             throw new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, passengerId));
-        }
-    }
-
-    private void validatePageRequestParameters(Integer page, Integer size) {
-        if (page < 0 || size < 0) {
-            throw new InvalidPageRequestException();
         }
     }
 
