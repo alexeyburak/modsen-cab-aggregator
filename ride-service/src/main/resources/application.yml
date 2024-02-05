@@ -4,7 +4,7 @@ spring:
   application:
     name: ride-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5444/rides}
+    url: ${DB_URL:jdbc:postgresql://localhost:5446/rides}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:

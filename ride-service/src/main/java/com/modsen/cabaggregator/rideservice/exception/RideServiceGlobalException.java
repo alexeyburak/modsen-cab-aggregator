@@ -1,30 +1,17 @@
 package com.modsen.cabaggregator.rideservice.exception;
 
+import com.modsen.cabaggregator.common.exception.CabAggregatorGlobalException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
-public class RideServiceGlobalException extends RuntimeException {
+public class RideServiceGlobalException extends CabAggregatorGlobalException {
 
-    private static final String GLOBAL_CODE = "Something went wrong";
-
-    private final String code;
-    private final String message;
-    private final LocalDateTime timestamp = LocalDateTime.now();
-
-    RideServiceGlobalException(String message, String code) {
-        super(message);
-        this.code = code;
-        this.message = message;
-    }
+    private static final String GLOBAL_CODE = "Something went wrong in ride service";
 
     RideServiceGlobalException(String message) {
-        super(message);
-        this.code = GLOBAL_CODE;
-        this.message = message;
+        super(message, GLOBAL_CODE);
     }
 
 }

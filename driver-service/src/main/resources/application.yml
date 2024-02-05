@@ -4,7 +4,7 @@ spring:
   application:
     name: driver-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5444/drivers}
+    url: ${DB_URL:jdbc:postgresql://localhost:5445/drivers}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:

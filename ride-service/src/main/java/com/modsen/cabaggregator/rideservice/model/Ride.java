@@ -67,10 +67,6 @@ public class Ride {
     private RidePaymentMethod paymentMethod;
 
     @Column(name = "paid", nullable = false)
-    private Boolean paid;
-
-    public Boolean isPaid() {
-        return paid;
-    }
+    private boolean paid;
 
 }

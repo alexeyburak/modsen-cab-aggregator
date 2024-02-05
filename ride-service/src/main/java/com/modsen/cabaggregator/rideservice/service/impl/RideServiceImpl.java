@@ -102,7 +102,7 @@ public class RideServiceImpl implements RideService {
     public MessageResponse rejectRide(UUID id) {
         Ride ride = findEntityById(id);
 
-        if (!ride.getStatus().equals(RideStatus.NOT_PAID) && Boolean.TRUE.equals(ride.isPaid())) {
+        if (!ride.getStatus().equals(RideStatus.NOT_PAID) && ride.isPaid()) {
             throw new ImpossibleRideRejectionException(id);
         }
         ride.setStatus(RideStatus.REJECTED);
@@ -167,7 +167,7 @@ public class RideServiceImpl implements RideService {
     }
 
     private void validateIfRideWasPaid(Ride ride) throws RideWasNotPaidException {
-        if (!ride.getStatus().equals(RideStatus.PAID) && Boolean.FALSE.equals(ride.isPaid())) {
+        if (!ride.getStatus().equals(RideStatus.PAID) && !ride.isPaid()) {
             throw new RideWasNotPaidException(ride.getId());
         }
     }

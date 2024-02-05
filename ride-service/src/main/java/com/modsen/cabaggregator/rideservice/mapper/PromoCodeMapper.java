@@ -1,6 +1,6 @@
 package com.modsen.cabaggregator.rideservice.mapper;
 
-import com.modsen.cabaggregator.rideservice.config.MapperConfig;
+import com.modsen.cabaggregator.common.config.MapperConfig;
 import com.modsen.cabaggregator.rideservice.dto.PromoCodeResponse;
 import com.modsen.cabaggregator.rideservice.model.PromoCode;
 import org.mapstruct.Mapper;
