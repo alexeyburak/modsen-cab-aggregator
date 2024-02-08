@@ -5,7 +5,7 @@ import com.stripe.exception.StripeException;
 public final class StripeChargeFromCustomerException extends StripeGlobalException {
 
     public StripeChargeFromCustomerException(StripeException ex) {
-        super("Charge from customer error", ex.getStripeError(), ex.getCode(), ex.getCode(), ex.getStatusCode());
+        super("Charge from customer error", ex.getCode(), ex.getCode(), ex.getStatusCode());
     }
 
 }

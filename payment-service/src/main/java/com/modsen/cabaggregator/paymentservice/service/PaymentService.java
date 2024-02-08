@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface PaymentService {
     MessageResponse charge(ChargeRequest request);
 
-    TokenResponse createToken(CardRequest request);
+    TokenResponse getToken(CardRequest request);
 
     CustomerResponse createCustomer(CustomerRequest request);
 

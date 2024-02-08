@@ -5,7 +5,7 @@ import com.stripe.exception.StripeException;
 public final class StripeBalanceRetrieveException extends StripeGlobalException {
 
     public StripeBalanceRetrieveException(StripeException ex) {
-        super("Balance retrieve error", ex.getStripeError(), ex.getCode(), ex.getCode(), ex.getStatusCode());
+        super("Balance retrieve error", ex.getCode(), ex.getCode(), ex.getStatusCode());
     }
 
 }

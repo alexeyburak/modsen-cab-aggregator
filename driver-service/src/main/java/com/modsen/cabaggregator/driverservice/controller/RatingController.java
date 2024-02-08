@@ -41,7 +41,7 @@ public class RatingController {
     }
 
     @Operation(description = "Get driver average rating by ID")
-    @GetMapping("/average")
+    @GetMapping(Constants.AVERAGE_MAPPING)
     public AverageRatingResponse getAverageDriverRating(@PathVariable UUID id) {
         return ratingService.getAverageDriverRating(id);
     }

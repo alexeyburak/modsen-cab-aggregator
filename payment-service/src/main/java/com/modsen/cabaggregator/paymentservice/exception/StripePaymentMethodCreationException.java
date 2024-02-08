@@ -5,7 +5,7 @@ import com.stripe.exception.StripeException;
 public final class StripePaymentMethodCreationException extends StripeGlobalException {
 
     public StripePaymentMethodCreationException(StripeException ex) {
-        super("Payment method creation error", ex.getStripeError(), ex.getCode(), ex.getCode(), ex.getStatusCode());
+        super("Payment method creation error", ex.getCode(), ex.getCode(), ex.getStatusCode());
     }
 
 }

@@ -46,7 +46,7 @@ public class RatingController {
     }
 
     @Operation(description = "Get passenger average rating by ID")
-    @GetMapping("/average")
+    @GetMapping(Constants.AVERAGE_MAPPING)
     public ResponseEntity<AverageRatingResponse> getAverageRating(@PathVariable UUID id) {
         return ResponseEntity.ok(
                 ratingService.getAveragePassengerRating(id)

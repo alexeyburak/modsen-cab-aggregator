@@ -5,6 +5,12 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Constants {
     public final String PAYMENTS_ENDPOINT = "/api/v1/payments";
+    public final String CHARGE_MAPPING = "/charge";
+    public final String TOKEN_MAPPING = "/token";
+    public final String CUSTOMERS_MAPPING = "/customers";
+    public final String CUSTOMERS_ID_MAPPING = "/customers/{id}";
+    public final String BALANCE_MAPPING = "/balance";
+    public final String CUSTOMERS_CHARGE_MAPPING = "/customers/charge";
     public final String PAYMENTS = "Payments";
     public final String AMOUNT = "amount";
     public final String CURRENCY = "currency";

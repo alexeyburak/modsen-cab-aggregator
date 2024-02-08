@@ -33,33 +33,33 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/charge")
+    @PostMapping(Constants.CHARGE_MAPPING)
     public MessageResponse chargeCard(@RequestBody @Valid ChargeRequest chargeRequest) {
         return paymentService.charge(chargeRequest);
     }
 
-    @PostMapping("/token")
+    @PostMapping(Constants.TOKEN_MAPPING)
     public TokenResponse createToken(@RequestBody @Valid CardRequest request) {
-        return paymentService.createToken(request);
+        return paymentService.getToken(request);
     }
 
-    @PostMapping("/customers")
+    @PostMapping(Constants.CUSTOMERS_MAPPING)
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerResponse createCustomer(@RequestBody @Valid CustomerRequest request) {
         return paymentService.createCustomer(request);
     }
 
-    @GetMapping("/customers/{id}")
+    @GetMapping(Constants.CUSTOMERS_ID_MAPPING)
     public CustomerResponse findCustomer(@PathVariable UUID id) {
         return paymentService.retrieveCustomer(id);
     }
 
-    @GetMapping("/balance")
+    @GetMapping(Constants.BALANCE_MAPPING)
     public BalanceResponse getBalance() {
         return paymentService.getBalance();
     }
 
-    @PostMapping("/customers/charge")
+    @PostMapping(Constants.CUSTOMERS_CHARGE_MAPPING)
     public ChargeResponse chargeFromCustomer(@RequestBody @Valid CustomerChargeRequest request) {
         return paymentService.chargeFromCustomer(request);
     }

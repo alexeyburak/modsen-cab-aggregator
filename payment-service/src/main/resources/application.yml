@@ -2,8 +2,8 @@ server:
   port: 8084
 stripe:
   keys:
-    public: ${STRIPE_API_PUBLIC_KEY}
-    secret: ${STRIPE_API_SECRET_KEY}
+    pk: ${STRIPE_API_PUBLIC_KEY}
+    sk: ${STRIPE_API_SECRET_KEY}
 spring:
   application:
     name: payment-service

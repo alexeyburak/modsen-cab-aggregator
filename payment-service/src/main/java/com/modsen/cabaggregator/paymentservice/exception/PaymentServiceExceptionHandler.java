@@ -32,8 +32,7 @@ public class PaymentServiceExceptionHandler {
         final HttpStatus status = HttpStatus.resolve(ex.getStatusCode());
         final StripeErrorResponse body = StripeErrorResponse.builder()
                 .message(ex.getMessage())
-                .stripeError(ex.getStripeError())
-                .code(ex.getCode())
+                .code(ex.getStatusCode().toString())
                 .requestId(ex.getRequestId())
                 .build();
         return new ResponseEntity<>(
