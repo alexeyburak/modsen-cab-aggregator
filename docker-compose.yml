@@ -9,3 +9,19 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: passengers
+  db-drivers:
+    image: postgres:latest
+    ports:
+      - "5445:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: drivers
+  db-rides:
+    image: postgres:latest
+    ports:
+      - "5446:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: rides

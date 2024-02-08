@@ -1,10 +1,10 @@
 server:
-  port: 8082
+  port: 8083
 spring:
   application:
-    name: driver-service
+    name: ride-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5445/drivers}
+    url: ${DB_URL:jdbc:postgresql://localhost:5446/rides}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:
