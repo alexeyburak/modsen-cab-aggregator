@@ -48,14 +48,14 @@ public class PromoCodeController {
     }
 
     @Operation(description = "Update promo code")
-    @PutMapping("/{name}")
+    @PutMapping(Constants.NAME_MAPPING)
     public PromoCodeResponse updatePromo(@PathVariable String name,
                                          @RequestBody @Valid UpdatePromoCodeRequest request) {
         return promoService.update(name, request);
     }
 
     @Operation(description = "Delete promotional code")
-    @DeleteMapping("/{name}")
+    @DeleteMapping(Constants.NAME_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePromo(@PathVariable String name) {
         promoService.delete(name);

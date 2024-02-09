@@ -59,20 +59,20 @@ public class DriverController {
     }
 
     @Operation(description = "Delete driver")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(Constants.ID_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         driverService.delete(id);
     }
 
     @Operation(description = "Get driver by ID")
-    @GetMapping("/{id}")
+    @GetMapping(Constants.ID_MAPPING)
     public DriverResponse findById(@PathVariable UUID id) {
         return driverService.findById(id);
     }
 
     @Operation(description = "Update driver by ID")
-    @PutMapping("/{id}")
+    @PutMapping(Constants.ID_MAPPING)
     public DriverResponse update(@PathVariable UUID id,
                                  @RequestBody @Valid UpdateDriverRequest request) {
         return driverService.update(id, request);

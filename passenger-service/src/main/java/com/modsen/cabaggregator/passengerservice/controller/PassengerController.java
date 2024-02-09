@@ -64,14 +64,14 @@ public class PassengerController {
     }
 
     @Operation(description = "Delete passenger")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(Constants.ID_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         passengerService.delete(id);
     }
 
     @Operation(description = "Get passenger by ID")
-    @GetMapping("/{id}")
+    @GetMapping(Constants.ID_MAPPING)
     public ResponseEntity<PassengerResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(
                 passengerService.findById(id)
@@ -79,7 +79,7 @@ public class PassengerController {
     }
 
     @Operation(description = "Update passenger by ID")
-    @PutMapping("/{id}")
+    @PutMapping(Constants.ID_MAPPING)
     public ResponseEntity<PassengerResponse> updatePassenger(@PathVariable UUID id,
                                                              @RequestBody @Valid UpdatePassengerRequest request) {
         return ResponseEntity.ok(

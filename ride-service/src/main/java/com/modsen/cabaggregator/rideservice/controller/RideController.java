@@ -39,7 +39,7 @@ public class RideController {
     private final RideService rideService;
 
     @Operation(description = "Retrieving rides history for a passenger")
-    @GetMapping("/history")
+    @GetMapping(Constants.HISTORY_MAPPING)
     public AllRidesResponse findAllPassengerRides(@RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_PAGE) Integer page,
                                                   @RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_SIZE) Integer size,
                                                   @RequestParam(required = false) Sort.Direction sortOrder,
@@ -54,13 +54,13 @@ public class RideController {
     }
 
     @Operation(description = "Getting a ride by ID")
-    @GetMapping("/{id}")
+    @GetMapping(Constants.ID_MAPPING)
     public RideResponse getRideById(@PathVariable UUID id) {
         return rideService.getById(id);
     }
 
     @Operation(description = "Removing a ride")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(Constants.ID_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRide(@PathVariable UUID id) {
         rideService.deleteById(id);
@@ -74,26 +74,26 @@ public class RideController {
     }
 
     @Operation(description = "Change ride status")
-    @PostMapping("/{id}/status")
+    @PostMapping(Constants.ID_STATUS_MAPPING)
     public RideResponse changeStatus(@PathVariable UUID id,
                                      @RequestParam RideStatus status) {
         return rideService.changeStatus(id, status);
     }
 
     @Operation(description = "Ride rejection")
-    @PutMapping("/{id}/reject")
+    @PutMapping(Constants.ID_REJECT_MAPPING)
     public MessageResponse rejectRide(@PathVariable UUID id) {
         return rideService.rejectRide(id);
     }
 
     @Operation(description = "Start ride")
-    @PutMapping("/{id}/start")
+    @PutMapping(Constants.ID_START_MAPPING)
     public MessageResponse startRide(@PathVariable UUID id) {
         return rideService.startRide(id);
     }
 
     @Operation(description = "Finish ride")
-    @PutMapping("/{id}/finish")
+    @PutMapping(Constants.ID_FINISH_MAPPING)
     public MessageResponse finishRide(@PathVariable UUID id) {
         return rideService.finishRide(id);
     }
