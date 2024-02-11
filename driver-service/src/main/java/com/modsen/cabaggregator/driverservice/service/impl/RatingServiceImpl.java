@@ -1,6 +1,6 @@
 package com.modsen.cabaggregator.driverservice.service.impl;
 
-import com.modsen.cabaggregator.common.util.GlobalConstants;
+import com.modsen.cabaggregator.common.util.CommonRatingCalculator;
 import com.modsen.cabaggregator.driverservice.dto.AllRatingsResponse;
 import com.modsen.cabaggregator.driverservice.dto.AverageRatingResponse;
 import com.modsen.cabaggregator.driverservice.dto.CreateRatingRequest;
@@ -11,13 +11,11 @@ import com.modsen.cabaggregator.driverservice.model.Rating;
 import com.modsen.cabaggregator.driverservice.repository.RatingRepository;
 import com.modsen.cabaggregator.driverservice.service.DriverService;
 import com.modsen.cabaggregator.driverservice.service.RatingService;
-import com.modsen.cabaggregator.driverservice.util.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 
 @Service
@@ -63,14 +61,10 @@ public class RatingServiceImpl implements RatingService {
     public AverageRatingResponse getAverageDriverRating(UUID driverId) {
         driverService.throwExceptionIfDriverDoesNotExist(driverId);
 
-        double averageRating = Double.parseDouble(
-                new DecimalFormat(GlobalConstants.DECIMAL_FORMAT_PATTERN)
-                        .format(ratingRepository.findRatingsByDriverId(driverId)
-                                .stream()
-                                .mapToDouble(Rating::getScore)
-                                .average()
-                                .orElse(GlobalConstants.DEFAULT_SCORE)
-                        )
+        double averageRating = CommonRatingCalculator.getAverage(
+                ratingRepository.findRatingsByDriverId(driverId)
+                        .stream()
+                        .mapToDouble(Rating::getScore)
         );
         log.debug("Calculate average driver rating. ID: {}", driverId);
         return new AverageRatingResponse(averageRating);

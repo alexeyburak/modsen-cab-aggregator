@@ -1,6 +1,6 @@
 package com.modsen.cabaggregator.passengerservice.service.impl;
 
-import com.modsen.cabaggregator.common.util.GlobalConstants;
+import com.modsen.cabaggregator.common.util.CommonRatingCalculator;
 import com.modsen.cabaggregator.passengerservice.dto.AllRatingsResponse;
 import com.modsen.cabaggregator.passengerservice.dto.AverageRatingResponse;
 import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 
 @Service
@@ -62,14 +61,10 @@ public class RatingServiceImpl implements RatingService {
     public AverageRatingResponse getAveragePassengerRating(UUID passengerId) {
         passengerService.throwExceptionIfPassengerDoesNotExist(passengerId);
 
-        double averageRating = Double.parseDouble(
-                new DecimalFormat(GlobalConstants.DECIMAL_FORMAT_PATTERN)
-                        .format(ratingRepository.findRatingsByPassengerId(passengerId)
-                                .stream()
-                                .mapToDouble(Rating::getScore)
-                                .average()
-                                .orElse(GlobalConstants.DEFAULT_SCORE)
-                        )
+        double averageRating = CommonRatingCalculator.getAverage(
+                ratingRepository.findRatingsByPassengerId(passengerId)
+                        .stream()
+                        .mapToDouble(Rating::getScore)
         );
         log.debug("Calculate average passenger rating. ID: {}", passengerId);
         return new AverageRatingResponse(averageRating);
