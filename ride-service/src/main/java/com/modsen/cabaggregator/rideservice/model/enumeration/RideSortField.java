@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum RideSortField {
-    COST("final_cost"),
-    DATE("date_at");
+    COST("finalCost"),
+    DATE("dateAt");
 
     private final String fieldName;
 

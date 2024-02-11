@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.rideservice.dto;
 
+import com.modsen.cabaggregator.rideservice.model.enumeration.RidePaymentMethod;
 import com.modsen.cabaggregator.rideservice.model.enumeration.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -17,11 +19,14 @@ import java.util.UUID;
 public class RideResponse {
     private UUID id;
     private String pickUp;
-    private LocalDate date;
+    private LocalDate dateAt;
+    private LocalTime timeAt;
     private String destination;
     private UUID passengerId;
     private UUID driverId;
     private BigDecimal initialCost;
     private BigDecimal finalCost;
     private RideStatus status;
+    private RidePaymentMethod paymentMethod;
+    private boolean paid;
 }

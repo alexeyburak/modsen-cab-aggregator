@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.rideservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.PageRequestValidator;
 import com.modsen.cabaggregator.rideservice.dto.AllPromoCodesResponse;
 import com.modsen.cabaggregator.rideservice.dto.CreatePromoCodeRequest;
 import com.modsen.cabaggregator.rideservice.dto.PromoCodeResponse;
@@ -27,6 +28,7 @@ public class PromoCodeServiceImpl implements PromoCodeService {
 
     @Override
     public AllPromoCodesResponse findAll(Integer page, Integer size) {
+        PageRequestValidator.validatePageRequestParameters(page, size);
         Page<PromoCode> promos = promoCodeRepository.findAll(PageRequest.of(page, size));
         return new AllPromoCodesResponse(
                 promos.getContent()
@@ -44,19 +46,20 @@ public class PromoCodeServiceImpl implements PromoCodeService {
         final String name = createPromoCodeRequest.getName();
         log.info("Create promo code. Name: {}", name);
         return promoCodeMapper.toPromoCodeResponse(
-                PromoCode.builder()
-                        .name(name)
-                        .value(createPromoCodeRequest.getValue())
-                        .build()
+                promoCodeRepository.save(
+                        PromoCode.builder()
+                                .name(name)
+                                .value(createPromoCodeRequest.getValue())
+                                .build()
+                )
         );
     }
 
     @Override
-    public PromoCodeResponse update(String name, UpdatePromoCodeRequest promoCodeDTO) {
+    public PromoCodeResponse update(String name, UpdatePromoCodeRequest request) {
         PromoCode promoCode = findByName(name);
 
-        promoCode.setName(promoCodeDTO.getName());
-        promoCode.setValue(promoCodeDTO.getValue());
+        promoCode.setValue(request.getValue());
 
         log.info("Update promo code. Name: {}", name);
         return promoCodeMapper.toPromoCodeResponse(

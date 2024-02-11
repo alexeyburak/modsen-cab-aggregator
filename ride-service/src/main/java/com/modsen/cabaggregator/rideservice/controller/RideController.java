@@ -7,7 +7,6 @@ import com.modsen.cabaggregator.rideservice.dto.MessageResponse;
 import com.modsen.cabaggregator.rideservice.dto.RideResponse;
 import com.modsen.cabaggregator.rideservice.dto.RideSortCriteria;
 import com.modsen.cabaggregator.rideservice.model.enumeration.RideSortField;
-import com.modsen.cabaggregator.rideservice.model.enumeration.RideStatus;
 import com.modsen.cabaggregator.rideservice.service.RideService;
 import com.modsen.cabaggregator.rideservice.util.Constants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,11 +72,10 @@ public class RideController {
         return rideService.save(request);
     }
 
-    @Operation(description = "Change ride status")
+    @Operation(description = "Change ride payment status")
     @PostMapping(Constants.ID_STATUS_MAPPING)
-    public RideResponse changeStatus(@PathVariable UUID id,
-                                     @RequestParam RideStatus status) {
-        return rideService.changeStatus(id, status);
+    public RideResponse changeStatus(@PathVariable UUID id) {
+        return rideService.changePaymentStatus(id);
     }
 
     @Operation(description = "Ride rejection")

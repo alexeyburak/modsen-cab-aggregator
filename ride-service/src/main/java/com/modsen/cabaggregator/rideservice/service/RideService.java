@@ -5,8 +5,6 @@ import com.modsen.cabaggregator.rideservice.dto.MessageResponse;
 import com.modsen.cabaggregator.rideservice.dto.RideSortCriteria;
 import com.modsen.cabaggregator.rideservice.dto.CreateRideRequest;
 import com.modsen.cabaggregator.rideservice.dto.RideResponse;
-import com.modsen.cabaggregator.rideservice.model.enumeration.RideStatus;
-import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
@@ -25,5 +23,5 @@ public interface RideService {
 
     MessageResponse finishRide(UUID id);
 
-    RideResponse changeStatus(UUID id, RideStatus status);
+    RideResponse changePaymentStatus(UUID id);
 }

@@ -1,6 +1,7 @@
 package com.modsen.cabaggregator.rideservice.exception;
 
 import com.modsen.cabaggregator.common.dto.ErrorResponse;
+import com.modsen.cabaggregator.common.exception.CabAggregatorGlobalException;
 import com.modsen.cabaggregator.common.exception.GlobalExceptionResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,8 +14,8 @@ import java.util.Map;
 @ControllerAdvice
 public class RideServiceExceptionHandler {
 
-    @ExceptionHandler(RideServiceGlobalException.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(RideServiceGlobalException ex) {
+    @ExceptionHandler(CabAggregatorGlobalException.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(CabAggregatorGlobalException ex) {
         return GlobalExceptionResolver.handleGlobalException(ex);
     }
 

@@ -21,8 +21,6 @@ public class CreateRideRequest {
 
     @NotBlank(message = "{ride.invalid.destination}")
     private String destination;
-
-    @NotBlank(message = "{ride.invalid.promoCode}")
     private String promoCode;
 
     @NotNull(message = "{ride.invalid.paymentMethod}")

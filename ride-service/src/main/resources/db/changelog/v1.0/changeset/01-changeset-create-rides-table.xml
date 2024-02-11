@@ -25,10 +25,10 @@
             <column name="driver_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="initial_cost" type="BIGINT" defaultValue="0">
+            <column name="initial_cost" type="NUMERIC" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
-            <column name="final_cost" type="BIGINT" defaultValue="0">
+            <column name="final_cost" type="NUMERIC" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="varchar(30)">

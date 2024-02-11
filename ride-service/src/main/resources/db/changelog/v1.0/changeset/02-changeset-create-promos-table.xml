@@ -7,7 +7,7 @@
             <column name="name" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="value" type="BIGINT" defaultValue="0">
+            <column name="value" type="NUMERIC" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
         </createTable>

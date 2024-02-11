@@ -12,7 +12,7 @@ public interface PromoCodeService {
 
     PromoCodeResponse create(CreatePromoCodeRequest createPromoCodeRequest);
 
-    PromoCodeResponse update(String name, UpdatePromoCodeRequest promoCodeDTO);
+    PromoCodeResponse update(String name, UpdatePromoCodeRequest request);
 
     void delete(String name);
 

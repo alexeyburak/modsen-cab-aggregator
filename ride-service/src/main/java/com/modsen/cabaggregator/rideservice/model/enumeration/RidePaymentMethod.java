@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public enum RidePaymentMethod {
     CASH,
-    CARD;
+    CARD
 }

@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.rideservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.PageRequestValidator;
 import com.modsen.cabaggregator.rideservice.dto.AllRidesResponse;
 import com.modsen.cabaggregator.rideservice.dto.CreateRideRequest;
 import com.modsen.cabaggregator.rideservice.dto.MessageResponse;
@@ -42,6 +43,7 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public AllRidesResponse findAllPassengerRides(UUID passengerId, Integer page, Integer size, RideSortCriteria sort) {
+        PageRequestValidator.validatePageRequestParameters(page, size);
         Sort sortBy = Sort.by(sort.getOrder(), sort.getField().getFieldName());
         Page<Ride> rides = rideRepository.findAllByPassengerId(
                 passengerId,
@@ -146,11 +148,12 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public RideResponse changeStatus(UUID id, RideStatus status) {
+    public RideResponse changePaymentStatus(UUID id) {
         Ride ride = findEntityById(id);
-        ride.setStatus(status);
+        ride.setStatus(RideStatus.PAID);
+        ride.setPaid(true);
 
-        log.info("Change ride status. ID: {}, Status: {}", id, status);
+        log.info("Change ride status. ID: {}, Status: {}", id, RideStatus.PAID);
         return rideMapper.toRideResponse(
                 rideRepository.save(ride)
         );
