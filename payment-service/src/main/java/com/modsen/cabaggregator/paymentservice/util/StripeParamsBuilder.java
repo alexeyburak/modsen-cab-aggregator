@@ -8,7 +8,6 @@ import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerUpdateParams;
 import com.stripe.param.PaymentIntentConfirmParams;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 public final class StripeParamsBuilder {
@@ -46,7 +45,9 @@ public final class StripeParamsBuilder {
         return Map.of(
                 Constants.AMOUNT, amount,
                 Constants.CURRENCY, GlobalConstants.BYN,
-                Constants.CUSTOMER, customerId
+                Constants.CUSTOMER, customerId,
+                "automatic_payment_methods[allow_redirects]", Constants.NEVER,
+                "automatic_payment_methods[enabled]", Boolean.TRUE.toString()
         );
     }
 

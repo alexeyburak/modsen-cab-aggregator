@@ -16,6 +16,7 @@ public class Constants {
     public final String CURRENCY = "currency";
     public final String SOURCE = "source";
     public final String NUMBER = "number";
+    public final String NEVER = "never";
     public final String EXP_MONTH = "exp_month";
     public final String EXP_YEAR = "exp_year";
     public final String CVC = "cvc";

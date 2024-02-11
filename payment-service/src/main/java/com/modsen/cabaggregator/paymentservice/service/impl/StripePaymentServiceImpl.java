@@ -25,6 +25,7 @@ import com.stripe.model.Token;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -59,6 +60,7 @@ public class StripePaymentServiceImpl implements PaymentService {
         return new TokenResponse(id);
     }
 
+    @Transactional
     @Override
     public CustomerResponse createCustomer(CustomerRequest request) {
         validateIsCustomerAlreadyExist(request);
@@ -73,6 +75,8 @@ public class StripePaymentServiceImpl implements PaymentService {
                 .id(id)
                 .email(customer.getEmail())
                 .phone(customer.getPhone())
+                .description(customer.getDescription())
+                .balance(customer.getBalance())
                 .name(customer.getName())
                 .build();
     }
@@ -88,6 +92,8 @@ public class StripePaymentServiceImpl implements PaymentService {
                 .id(customer.getId())
                 .email(customer.getEmail())
                 .phone(customer.getPhone())
+                .description(customer.getDescription())
+                .balance(customer.getBalance())
                 .name(customer.getName())
                 .build();
     }
@@ -102,13 +108,13 @@ public class StripePaymentServiceImpl implements PaymentService {
         );
     }
 
+    @Transactional
     @Override
     public ChargeResponse chargeFromCustomer(CustomerChargeRequest request) {
         final String customerId = getEntityById(request.getPassengerId()).getCustomerId();
         final long amount = request.getAmount().longValue();
 
         checkBalance(customerId, amount);
-        updateBalance(customerId, amount);
 
         PaymentIntent intent = modelsBuilderService.createPaymentIntent(
                 StripeParamsBuilder.getPaymentIntentParams(amount, customerId)
@@ -119,6 +125,7 @@ public class StripePaymentServiceImpl implements PaymentService {
                 StripeParamsBuilder.getPaymentIntentConfirmParams()
         );
 
+        updateBalance(customerId, amount);
         log.info("Charge from customer. Customer ID: {}", customerId);
         return ChargeResponse.builder()
                 .amount(intent.getAmount())
