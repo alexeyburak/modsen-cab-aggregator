@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.UUID;
 
 @FeignClient(
-        value = "driver-service",
-        url = "http://localhost:8082/api/v1/drivers"
+        value = "${feign.client.config.driver.name}",
+        url = "${feign.client.config.driver.url}",
+        path = "${feign.client.config.driver.path}"
 )
 public interface DriverServiceClient {
 

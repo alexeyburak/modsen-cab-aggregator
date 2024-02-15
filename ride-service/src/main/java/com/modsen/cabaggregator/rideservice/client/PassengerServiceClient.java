@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.UUID;
 
 @FeignClient(
-        value = "passenger-service",
-        url = "http://localhost:8081/api/v1/passengers"
+        value = "${feign.client.config.passenger.name}",
+        url = "${feign.client.config.passenger.url}",
+        path = "${feign.client.config.passenger.path}"
 )
 public interface PassengerServiceClient {
 

@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.UUID;
 
 @FeignClient(
-        value = "ride-service",
-        url = "http://localhost:8083/api/v1/rides"
+        value = "{feign.client.config.ride.name}",
+        url = "{feign.client.config.ride.url}",
+        path = "{feign.client.config.ride.path}"
 )
 public interface RideServiceClient {
 

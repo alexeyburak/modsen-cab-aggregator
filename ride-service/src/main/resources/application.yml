@@ -16,3 +16,14 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+feign:
+  client:
+    config:
+      driver:
+        name: driver-service
+        url: http://localhost:8082
+        path: /api/v1/drivers
+      passenger:
+        name: passenger-service
+        url: http://localhost:8081
+        path: /api/v1/passengers
