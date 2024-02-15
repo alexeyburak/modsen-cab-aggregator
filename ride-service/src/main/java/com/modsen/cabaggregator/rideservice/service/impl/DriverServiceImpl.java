@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.rideservice.service.impl;
 
+import com.modsen.cabaggregator.rideservice.client.DriverServiceClient;
 import com.modsen.cabaggregator.rideservice.model.enumeration.DriverStatus;
 import com.modsen.cabaggregator.rideservice.service.DriverService;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +14,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DriverServiceImpl implements DriverService {
 
+    private final DriverServiceClient driverClient;
+
     @Override
     public UUID getAvailableDriverId() {
-        return UUID.randomUUID();
+        return driverClient.findAvailableDriverById()
+                .getId();
     }
 
     @Override
-    public void changeDriverStatus(UUID id, DriverStatus driverStatus) {
-        log.info("Change driver status. ID: {}, New status: {}", id, driverStatus);
+    public void changeDriverStatus(UUID id, DriverStatus status) {
+        driverClient.updateStatus(id, status);
+        log.info("Change driver status. ID: {}, New status: {}", id, status);
     }
 
 }

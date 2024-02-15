@@ -14,7 +14,7 @@ import java.util.Map;
 @RestControllerAdvice
 public final class PassengerServiceExceptionHandler {
 
-    @ExceptionHandler(PassengerServiceGlobalException.class)
+    @ExceptionHandler(CabAggregatorGlobalException.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(CabAggregatorGlobalException ex) {
         return GlobalExceptionResolver.handleGlobalException(ex);
     }

@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.paymentservice.service.impl;
 
+import com.modsen.cabaggregator.paymentservice.client.RideServiceClient;
 import com.modsen.cabaggregator.paymentservice.dto.BalanceResponse;
 import com.modsen.cabaggregator.paymentservice.dto.CardRequest;
 import com.modsen.cabaggregator.paymentservice.dto.ChargeRequest;
@@ -8,6 +9,7 @@ import com.modsen.cabaggregator.paymentservice.dto.CustomerChargeRequest;
 import com.modsen.cabaggregator.paymentservice.dto.CustomerRequest;
 import com.modsen.cabaggregator.paymentservice.dto.CustomerResponse;
 import com.modsen.cabaggregator.paymentservice.dto.MessageResponse;
+import com.modsen.cabaggregator.paymentservice.dto.RideInfoResponse;
 import com.modsen.cabaggregator.paymentservice.dto.TokenResponse;
 import com.modsen.cabaggregator.paymentservice.exception.CustomerIsAlreadyExistException;
 import com.modsen.cabaggregator.paymentservice.exception.CustomerNotFoundException;
@@ -37,12 +39,19 @@ public class StripePaymentServiceImpl implements PaymentService {
 
     private final CustomerRepository customerRepository;
     private final StripeModelsBuilderService modelsBuilderService;
+    private final RideServiceClient rideClient;
 
+    @Transactional
     @Override
     public MessageResponse charge(ChargeRequest request) {
+        final UUID rideId = request.getRideId();
         Charge charge = modelsBuilderService.createCharge(
-                StripeParamsBuilder.getChargeParams(request)
+                StripeParamsBuilder.getChargeParams(
+                        getRideById(rideId).getFinalCost().longValue(),
+                        request.getCardToken()
+                )
         );
+        changeRideStatus(rideId);
 
         final String id = charge.getId();
         log.info("Charge by card token. Charge ID: {}", id);
@@ -111,8 +120,9 @@ public class StripePaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public ChargeResponse chargeFromCustomer(CustomerChargeRequest request) {
-        final String customerId = getEntityById(request.getPassengerId()).getCustomerId();
-        final long amount = request.getAmount().longValue();
+        RideInfoResponse ride = getRideById(request.getRideId());
+        final String customerId = getEntityById(ride.getPassenger().getId()).getCustomerId();
+        final long amount = ride.getFinalCost().longValue();
 
         checkBalance(customerId, amount);
 
@@ -126,6 +136,7 @@ public class StripePaymentServiceImpl implements PaymentService {
         );
 
         updateBalance(customerId, amount);
+        changeRideStatus(ride.getId());
         log.info("Charge from customer. Customer ID: {}", customerId);
         return ChargeResponse.builder()
                 .amount(intent.getAmount())
@@ -140,6 +151,14 @@ public class StripePaymentServiceImpl implements PaymentService {
                 StripeParamsBuilder.getPaymentMethodParams(),
                 StripeParamsBuilder.getPaymentMethodAttachParams(customerId)
         );
+    }
+
+    private RideInfoResponse getRideById(UUID rideId) {
+        return rideClient.getRideById(rideId);
+    }
+
+    private void changeRideStatus(UUID id) {
+        rideClient.changeStatus(id);
     }
 
     private void validateIsCustomerAlreadyExist(CustomerRequest request) {

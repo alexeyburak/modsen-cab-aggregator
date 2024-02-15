@@ -1,8 +1,11 @@
 package com.modsen.cabaggregator.passengerservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.common.util.PageRequestValidator;
+import com.modsen.cabaggregator.passengerservice.client.PaymentServiceClient;
 import com.modsen.cabaggregator.passengerservice.dto.AllPassengersResponse;
 import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
+import com.modsen.cabaggregator.passengerservice.dto.CustomerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
 import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
@@ -34,6 +37,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
+    private final PaymentServiceClient paymentClient;
 
     @Override
     public AllPassengersResponse findAll(Integer page, Integer size, PassengerSortCriteria sort) {
@@ -58,18 +62,18 @@ public class PassengerServiceImpl implements PassengerService {
         validateUniqueData(request);
 
         final String email = request.getEmail().toLowerCase();
-        log.info("Save new passenger. Email: {}", email);
-        return passengerMapper.toPassengerResponse(
-                passengerRepository.save(
-                        Passenger.builder()
-                                .name(request.getName())
-                                .surname(request.getSurname())
-                                .email(email)
-                                .phone(request.getPhone())
-                                .active(true)
-                                .build()
-                )
+        Passenger passenger = passengerRepository.save(
+                Passenger.builder()
+                        .name(request.getName())
+                        .surname(request.getSurname())
+                        .email(email)
+                        .phone(request.getPhone())
+                        .active(true)
+                        .build()
         );
+        createCustomer(request, passenger.getId());
+        log.info("Save new passenger. Email: {}", email);
+        return passengerMapper.toPassengerResponse(passenger);
     }
 
     @Override
@@ -113,6 +117,18 @@ public class PassengerServiceImpl implements PassengerService {
         if (!passengerRepository.existsById(passengerId)) {
             throw new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, passengerId));
         }
+    }
+
+    private void createCustomer(CreatePassengerRequest request, UUID passengerId) {
+        paymentClient.createCustomer(
+                CustomerRequest.builder()
+                        .name(request.getName())
+                        .email(request.getEmail())
+                        .phone(request.getPhone())
+                        .passengerId(passengerId)
+                        .balance(GlobalConstants.DEFAULT_CUSTOMER_BALANCE)
+                        .build()
+        );
     }
 
     private void updatePhone(String updatedPhone, Passenger passenger) {

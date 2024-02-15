@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Constants {
     public final String PAYMENTS_ENDPOINT = "/api/v1/payments";
+    public final String RIDE_PAYMENTS_ENDPOINT = "/api/v1/payments/{id}/ride";
     public final String CHARGE_MAPPING = "/charge";
     public final String TOKEN_MAPPING = "/token";
     public final String CUSTOMERS_MAPPING = "/customers";

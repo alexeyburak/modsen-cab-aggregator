@@ -7,6 +7,7 @@ import com.modsen.cabaggregator.driverservice.dto.UpdateDriverRequest;
 import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
 import com.modsen.cabaggregator.driverservice.exception.DriverNotFoundException;
 import com.modsen.cabaggregator.driverservice.model.Driver;
+import com.modsen.cabaggregator.driverservice.model.enumeration.DriverStatus;
 
 import java.util.UUID;
 
@@ -24,4 +25,8 @@ public interface DriverService {
     Driver findEntityById(UUID id);
 
     void throwExceptionIfDriverDoesNotExist(UUID driverId) throws DriverNotFoundException;
+
+    DriverResponse findAvailableById();
+
+    DriverResponse updateStatus(UUID id, DriverStatus status);
 }

@@ -1,6 +1,5 @@
 package com.modsen.cabaggregator.paymentservice.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomerChargeRequest {
-    @NotNull(message = "{charge.id.invalid.empty}")
-    private UUID rideId;
+public class PassengerResponse {
+    private UUID id;
+    private String name;
+    private String surname;
+    private String email;
+    private String phone;
+    private Boolean active;
 }

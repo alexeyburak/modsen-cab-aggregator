@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,27 +39,23 @@ public class PassengerController {
 
     @Operation(description = "Get all passengers")
     @GetMapping
-    public ResponseEntity<AllPassengersResponse> findAll(@RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_PAGE) Integer page,
-                                                         @RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_SIZE) Integer size,
-                                                         @RequestParam(required = false) Sort.Direction sortOrder,
-                                                         @RequestParam(required = false) PassengerSortField sortField) {
+    public AllPassengersResponse findAll(@RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_PAGE) Integer page,
+                                         @RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_SIZE) Integer size,
+                                         @RequestParam(required = false) Sort.Direction sortOrder,
+                                         @RequestParam(required = false) PassengerSortField sortField) {
         final PassengerSortCriteria sort = PassengerSortCriteria.builder()
                 .field(Optional.ofNullable(sortField).orElse(PassengerSortField.NAME))
                 .order(Optional.ofNullable(sortOrder).orElse(Sort.Direction.ASC))
                 .build();
 
-        return ResponseEntity.ok(
-                passengerService.findAll(page, size, sort)
-        );
+        return passengerService.findAll(page, size, sort);
     }
 
     @Operation(description = "Add new passenger")
     @PostMapping
-    public ResponseEntity<PassengerResponse> save(@RequestBody @Valid CreatePassengerRequest request) {
-        return new ResponseEntity<>(
-                passengerService.save(request),
-                HttpStatus.CREATED
-        );
+    @ResponseStatus(HttpStatus.CREATED)
+    public PassengerResponse save(@RequestBody @Valid CreatePassengerRequest request) {
+        return passengerService.save(request);
     }
 
     @Operation(description = "Delete passenger")
@@ -72,19 +67,15 @@ public class PassengerController {
 
     @Operation(description = "Get passenger by ID")
     @GetMapping(Constants.ID_MAPPING)
-    public ResponseEntity<PassengerResponse> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(
-                passengerService.findById(id)
-        );
+    public PassengerResponse findById(@PathVariable UUID id) {
+        return passengerService.findById(id);
     }
 
     @Operation(description = "Update passenger by ID")
     @PutMapping(Constants.ID_MAPPING)
-    public ResponseEntity<PassengerResponse> updatePassenger(@PathVariable UUID id,
-                                                             @RequestBody @Valid UpdatePassengerRequest request) {
-        return ResponseEntity.ok(
-                passengerService.update(id, request)
-        );
+    public PassengerResponse updatePassenger(@PathVariable UUID id,
+                                             @RequestBody @Valid UpdatePassengerRequest request) {
+        return passengerService.update(id, request);
     }
 
 }

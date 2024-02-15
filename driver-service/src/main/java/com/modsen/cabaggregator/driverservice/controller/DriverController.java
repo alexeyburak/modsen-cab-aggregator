@@ -7,6 +7,7 @@ import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
 import com.modsen.cabaggregator.driverservice.dto.DriverSortCriteria;
 import com.modsen.cabaggregator.driverservice.dto.UpdateDriverRequest;
 import com.modsen.cabaggregator.driverservice.model.enumeration.DriverSortField;
+import com.modsen.cabaggregator.driverservice.model.enumeration.DriverStatus;
 import com.modsen.cabaggregator.driverservice.service.DriverService;
 import com.modsen.cabaggregator.driverservice.util.Constants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -69,6 +71,18 @@ public class DriverController {
     @GetMapping(Constants.ID_MAPPING)
     public DriverResponse findById(@PathVariable UUID id) {
         return driverService.findById(id);
+    }
+
+    @Operation(description = "Get random available driver")
+    @GetMapping(Constants.AVAILABLE_MAPPING)
+    public DriverResponse findAvailableDriverById() {
+        return driverService.findAvailableById();
+    }
+
+    @Operation(description = "Update driver status by ID")
+    @PatchMapping(Constants.ID_MAPPING + Constants.STATUS_MAPPING)
+    public DriverResponse updateStatus(@PathVariable UUID id, @RequestParam DriverStatus status) {
+        return driverService.updateStatus(id, status);
     }
 
     @Operation(description = "Update driver by ID")
