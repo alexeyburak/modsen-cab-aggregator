@@ -3,3 +3,9 @@ server:
 spring:
   application:
     name: notification-service
+  kafka:
+    bootstrap-servers: host.docker.internal:9092
+    consumer:
+      group-id: ${spring.application.name}
+      keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+      valueDeserializer: org.apache.kafka.common.serialization.StringDeserializer

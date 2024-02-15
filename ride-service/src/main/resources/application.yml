@@ -16,6 +16,13 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+  kafka:
+    bootstrap-servers: host.docker.internal:9092
+    producer:
+      client-id: ${spring.application.name}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 3
 feign:
   client:
     config:
