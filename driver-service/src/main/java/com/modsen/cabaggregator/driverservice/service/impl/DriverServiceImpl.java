@@ -7,6 +7,7 @@ import com.modsen.cabaggregator.driverservice.dto.DriverSortCriteria;
 import com.modsen.cabaggregator.driverservice.dto.UpdateDriverRequest;
 import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
 import com.modsen.cabaggregator.driverservice.exception.DriverNotFoundException;
+import com.modsen.cabaggregator.driverservice.exception.NoAvailableDriversException;
 import com.modsen.cabaggregator.driverservice.exception.PhoneIsAlreadyExistsException;
 import com.modsen.cabaggregator.driverservice.mapper.DriverMapper;
 import com.modsen.cabaggregator.driverservice.model.Driver;
@@ -108,6 +109,29 @@ public class DriverServiceImpl implements DriverService {
         if (!driverRepository.existsById(driverId)) {
             throw new DriverNotFoundException(driverId);
         }
+    }
+
+    @Override
+    public DriverResponse findAvailableById() {
+        return driverMapper.toDriverResponse(
+                driverRepository.findAllByStatus(DriverStatus.AVAILABLE)
+                        .stream()
+                        .findAny()
+                        .orElseThrow(NoAvailableDriversException::new)
+        );
+    }
+
+    @Override
+    public DriverResponse updateStatus(UUID id, DriverStatus status) {
+        Driver driver = findEntityById(id);
+        driver.setStatus(status);
+
+        log.info("Update driver status. ID: {}, Status: {}", id, status);
+        return driverMapper.toDriverResponse(
+                driverRepository.save(
+                        driverRepository.save(driver)
+                )
+        );
     }
 
     private void updateDriverInfo(UpdateDriverRequest request, Driver driver) {

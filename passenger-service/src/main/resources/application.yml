@@ -16,3 +16,10 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+feign:
+  client:
+    config:
+      payment:
+        name: payment-service
+        url: http://localhost:8084
+        path: /api/v1/payments

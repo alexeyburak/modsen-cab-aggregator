@@ -2,7 +2,6 @@ package com.modsen.cabaggregator.driverservice.dto;
 
 import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.driverservice.model.enumeration.DriverStatus;
-import com.modsen.cabaggregator.driverservice.util.Constants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

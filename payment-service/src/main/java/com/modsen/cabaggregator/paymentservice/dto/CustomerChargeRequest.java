@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -14,9 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class CustomerChargeRequest {
-    @NotNull(message = "{charge.amount.invalid.empty}")
-    private BigDecimal amount;
-
     @NotNull(message = "{charge.id.invalid.empty}")
-    private UUID passengerId;
+    private UUID rideId;
 }

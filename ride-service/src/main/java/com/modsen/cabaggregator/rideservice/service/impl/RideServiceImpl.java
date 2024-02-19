@@ -1,10 +1,14 @@
 package com.modsen.cabaggregator.rideservice.service.impl;
 
+import com.modsen.cabaggregator.common.util.NotificationType;
 import com.modsen.cabaggregator.common.util.PageRequestValidator;
+import com.modsen.cabaggregator.rideservice.client.DriverServiceClient;
+import com.modsen.cabaggregator.rideservice.client.PassengerServiceClient;
 import com.modsen.cabaggregator.rideservice.dto.AllRidesResponse;
 import com.modsen.cabaggregator.rideservice.dto.CreateRideRequest;
 import com.modsen.cabaggregator.rideservice.dto.MessageResponse;
-import com.modsen.cabaggregator.rideservice.dto.RideResponse;
+import com.modsen.cabaggregator.rideservice.dto.NotificationDto;
+import com.modsen.cabaggregator.rideservice.dto.RideInfoResponse;
 import com.modsen.cabaggregator.rideservice.dto.RideSortCriteria;
 import com.modsen.cabaggregator.rideservice.exception.ImpossibleRideRejectionException;
 import com.modsen.cabaggregator.rideservice.exception.RideNotFoundException;
@@ -16,6 +20,7 @@ import com.modsen.cabaggregator.rideservice.model.enumeration.DriverStatus;
 import com.modsen.cabaggregator.rideservice.model.enumeration.MessageResponseCode;
 import com.modsen.cabaggregator.rideservice.model.enumeration.RideStatus;
 import com.modsen.cabaggregator.rideservice.repository.RideRepository;
+import com.modsen.cabaggregator.rideservice.service.NotificationBrokerService;
 import com.modsen.cabaggregator.rideservice.service.DriverService;
 import com.modsen.cabaggregator.rideservice.service.RideCostService;
 import com.modsen.cabaggregator.rideservice.service.RideService;
@@ -40,6 +45,9 @@ public class RideServiceImpl implements RideService {
     private final DriverService driverService;
     private final RideCostService rideCostService;
     private final RideMapper rideMapper;
+    private final DriverServiceClient driverClient;
+    private final PassengerServiceClient passengerClient;
+    private final NotificationBrokerService notificationService;
 
     @Override
     public AllRidesResponse findAllPassengerRides(UUID passengerId, Integer page, Integer size, RideSortCriteria sort) {
@@ -61,9 +69,12 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public RideResponse getById(UUID id) {
-        return rideMapper.toRideResponse(
-                findEntityById(id)
+    public RideInfoResponse getById(UUID id) {
+        Ride ride = findEntityById(id);
+        return rideMapper.toRideInfoResponse(
+                ride,
+                driverClient.findById(ride.getDriverId()),
+                passengerClient.findById(ride.getPassengerId())
         );
     }
 
@@ -74,14 +85,14 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public RideResponse save(CreateRideRequest request) {
+    public RideInfoResponse save(CreateRideRequest request) {
         final BigDecimal initialCost = rideCostService.getInitialRideCost();
         final UUID availableDriverId = driverService.getAvailableDriverId();
         final UUID passengerId = request.getPassengerId();
 
         driverService.changeDriverStatus(availableDriverId, DriverStatus.UNAVAILABLE);
         log.info("Save new ride. Driver ID: {}, Passenger ID: {}", availableDriverId, passengerId);
-        return rideMapper.toRideResponse(
+        return rideMapper.toRideInfoResponse(
                 rideRepository.save(
                         Ride.builder()
                                 .pickUp(request.getPickUp())
@@ -95,8 +106,9 @@ public class RideServiceImpl implements RideService {
                                 .status(RideStatus.NOT_PAID)
                                 .paymentMethod(request.getPaymentMethod())
                                 .paid(false)
-                                .build()
-                )
+                                .build()),
+                driverClient.findById(availableDriverId),
+                passengerClient.findById(passengerId)
         );
     }
 
@@ -110,6 +122,7 @@ public class RideServiceImpl implements RideService {
         ride.setStatus(RideStatus.REJECTED);
 
         saveRideAndUpdateDriverStatus(ride, DriverStatus.AVAILABLE);
+        sendEmailNotification(NotificationType.REJECT_RIDE, ride.getPassengerId());
         log.info("Reject ride. ID: {}", id);
         return new MessageResponse(
                 MessageResponseCode.REJECT_RIDE.getGlobalCode()
@@ -124,6 +137,7 @@ public class RideServiceImpl implements RideService {
         ride.setStatus(RideStatus.STARTED);
 
         saveRideAndUpdateDriverStatus(ride, DriverStatus.UNAVAILABLE);
+        sendEmailNotification(NotificationType.START_RIDE, ride.getPassengerId());
         log.info("Start ride. ID: {}", id);
         return new MessageResponse(
                 MessageResponseCode.START_RIDE.getGlobalCode()
@@ -141,6 +155,7 @@ public class RideServiceImpl implements RideService {
         ride.setStatus(RideStatus.FINISHED);
 
         saveRideAndUpdateDriverStatus(ride, DriverStatus.AVAILABLE);
+        sendEmailNotification(NotificationType.FINISH_RIDE, ride.getPassengerId());
         log.info("Start ride. ID: {}", id);
         return new MessageResponse(
                 MessageResponseCode.FINISH_RIDE.getGlobalCode()
@@ -148,14 +163,17 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public RideResponse changePaymentStatus(UUID id) {
+    public RideInfoResponse changePaymentStatus(UUID id) {
         Ride ride = findEntityById(id);
         ride.setStatus(RideStatus.PAID);
         ride.setPaid(true);
 
+        sendEmailNotification(NotificationType.CHANGE_PAYMENT_STATUS, ride.getPassengerId());
         log.info("Change ride status. ID: {}, Status: {}", id, RideStatus.PAID);
-        return rideMapper.toRideResponse(
-                rideRepository.save(ride)
+        return rideMapper.toRideInfoResponse(
+                rideRepository.save(ride),
+                driverClient.findById(ride.getDriverId()),
+                passengerClient.findById(ride.getPassengerId())
         );
     }
 
@@ -167,6 +185,13 @@ public class RideServiceImpl implements RideService {
     private void saveRideAndUpdateDriverStatus(Ride ride, DriverStatus status) {
         driverService.changeDriverStatus(ride.getDriverId(), status);
         rideRepository.save(ride);
+    }
+
+    private void sendEmailNotification(NotificationType type, UUID passengerId) {
+        notificationService.send(
+                type.getBrokerTopic(),
+                new NotificationDto(passengerClient.findById(passengerId).getEmail())
+        );
     }
 
     private void validateIfRideWasPaid(Ride ride) throws RideWasNotPaidException {

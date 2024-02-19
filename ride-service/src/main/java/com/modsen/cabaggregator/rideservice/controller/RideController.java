@@ -4,7 +4,7 @@ import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.rideservice.dto.AllRidesResponse;
 import com.modsen.cabaggregator.rideservice.dto.CreateRideRequest;
 import com.modsen.cabaggregator.rideservice.dto.MessageResponse;
-import com.modsen.cabaggregator.rideservice.dto.RideResponse;
+import com.modsen.cabaggregator.rideservice.dto.RideInfoResponse;
 import com.modsen.cabaggregator.rideservice.dto.RideSortCriteria;
 import com.modsen.cabaggregator.rideservice.model.enumeration.RideSortField;
 import com.modsen.cabaggregator.rideservice.service.RideService;
@@ -54,7 +54,7 @@ public class RideController {
 
     @Operation(description = "Getting a ride by ID")
     @GetMapping(Constants.ID_MAPPING)
-    public RideResponse getRideById(@PathVariable UUID id) {
+    public RideInfoResponse getRideById(@PathVariable UUID id) {
         return rideService.getById(id);
     }
 
@@ -68,13 +68,13 @@ public class RideController {
     @Operation(description = "Create a ride")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RideResponse addRide(@RequestBody @Valid CreateRideRequest request) {
+    public RideInfoResponse addRide(@RequestBody @Valid CreateRideRequest request) {
         return rideService.save(request);
     }
 
-    @Operation(description = "Change ride payment status")
+    @Operation(description = "Change ride payment status", hidden = true)
     @PostMapping(Constants.ID_STATUS_MAPPING)
-    public RideResponse changeStatus(@PathVariable UUID id) {
+    public RideInfoResponse changeStatus(@PathVariable UUID id) {
         return rideService.changePaymentStatus(id);
     }
 

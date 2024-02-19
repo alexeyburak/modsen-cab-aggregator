@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface DriverService {
     UUID getAvailableDriverId();
 
-    void changeDriverStatus(UUID id, DriverStatus driverStatus);
+    void changeDriverStatus(UUID id, DriverStatus status);
 }

@@ -2,7 +2,6 @@ package com.modsen.cabaggregator.paymentservice.util;
 
 import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.paymentservice.dto.CardRequest;
-import com.modsen.cabaggregator.paymentservice.dto.ChargeRequest;
 import com.modsen.cabaggregator.paymentservice.dto.CustomerRequest;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerUpdateParams;
@@ -15,11 +14,11 @@ public final class StripeParamsBuilder {
     private StripeParamsBuilder() {
     }
 
-    public static Map<String, Object> getChargeParams(ChargeRequest request) {
+    public static Map<String, Object> getChargeParams(long amount, String cardToken) {
         return Map.of(
-                Constants.AMOUNT, request.getAmount(),
+                Constants.AMOUNT, amount,
                 Constants.CURRENCY, GlobalConstants.BYN,
-                Constants.SOURCE, request.getCardToken()
+                Constants.SOURCE, cardToken
         );
     }
 
