@@ -6,6 +6,7 @@ import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.CustomerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerSortCriteria;
+import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.exception.EmailIsAlreadyExistsException;
 import com.modsen.cabaggregator.passengerservice.exception.PassengerNotFoundException;
 import com.modsen.cabaggregator.passengerservice.exception.PhoneIsAlreadyExistsException;
@@ -35,6 +36,10 @@ class PassengerServiceImplTest {
 
     public static final String PASSENGER_WAS_NOT_FOUND = "Passenger with %s was not found";
     private static final UUID PASSENGER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private static final String NAME = "name";
+    private static final String SURNAME = "surname";
+    private static final String EMAIL = "email@gmail.com";
+    private static final String PHONE = "80291112233";
 
     @InjectMocks
     private PassengerServiceImpl passengerService;
@@ -67,7 +72,6 @@ class PassengerServiceImplTest {
         ).thenReturn(passengerPage);
         Mockito.when(passengerMapper.toPassengerResponse(passengers.get(0))).thenReturn(expectedResponses.get(0));
         Mockito.when(passengerMapper.toPassengerResponse(passengers.get(1))).thenReturn(expectedResponses.get(1));
-        Mockito.doNothing().when(paymentClient).createCustomer(Mockito.any(CustomerRequest.class));
 
         AllPassengersResponse response = passengerService.findAll(
                 page, size, new PassengerSortCriteria(PassengerSortField.EMAIL, Sort.Direction.ASC)
@@ -82,25 +86,21 @@ class PassengerServiceImplTest {
 
     @Test
     void save_ValidUser_ShouldSaveUserToRepository() {
-        String validName = "validName";
-        String validSurname = "validSurname";
-        String mail = "email@gmail.com";
-        String number = "80291112233";
         final CreatePassengerRequest request = CreatePassengerRequest.builder()
-                .name(validName)
-                .surname(validSurname)
-                .email(mail)
-                .phone(number)
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
                 .build();
         final Passenger passenger = Passenger.builder()
-                .name(validName)
-                .surname(validSurname)
-                .email(mail)
-                .phone(number)
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
                 .active(true)
                 .build();
-        Mockito.when(passengerRepository.existsByEmail(mail)).thenReturn(false);
-        Mockito.when(passengerRepository.existsByPhone(number)).thenReturn(false);
+        Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(false);
+        Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(false);
         Mockito.when(passengerRepository.save(Mockito.any(Passenger.class))).thenReturn(passenger);
 
         PassengerResponse actual = passengerService.save(request);
@@ -109,73 +109,65 @@ class PassengerServiceImplTest {
         Mockito.verify(paymentClient).createCustomer(Mockito.any(CustomerRequest.class));
         Mockito.verify(passengerMapper, Mockito.times(2)).toPassengerResponse(passenger);
         Mockito.verify(passengerRepository).save(Mockito.any(Passenger.class));
-        Mockito.verify(passengerRepository).existsByPhone(number);
-        Mockito.verify(passengerRepository).existsByEmail(mail);
+        Mockito.verify(passengerRepository).existsByPhone(PHONE);
+        Mockito.verify(passengerRepository).existsByEmail(EMAIL);
     }
 
     @Test
     void save_NotUniqueUserMail_ShouldThrowEmailIsAlreadyExistsException() {
-        String validName = "validName";
-        String validSurname = "validSurname";
-        String mail = "email@gmail.com";
-        String number = "80291112233";
         final CreatePassengerRequest request = CreatePassengerRequest.builder()
-                .name(validName)
-                .surname(validSurname)
-                .email(mail)
-                .phone(number)
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
                 .build();
         final Passenger passenger = Passenger.builder()
-                .name(validName)
-                .surname(validSurname)
-                .email(mail)
-                .phone(number)
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
                 .active(true)
                 .build();
-        Mockito.when(passengerRepository.existsByEmail(mail)).thenReturn(true);
+        Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(true);
 
         Assertions.assertThatThrownBy(() ->
                 passengerService.save(request)
-        ).isInstanceOf(EmailIsAlreadyExistsException.class).hasMessageContaining(mail);
+        ).isInstanceOf(EmailIsAlreadyExistsException.class).hasMessageContaining(EMAIL);
 
         Mockito.verify(paymentClient, Mockito.never()).createCustomer(Mockito.any(CustomerRequest.class));
         Mockito.verify(passengerMapper, Mockito.never()).toPassengerResponse(passenger);
         Mockito.verify(passengerRepository, Mockito.never()).save(Mockito.any(Passenger.class));
-        Mockito.verify(passengerRepository, Mockito.never()).existsByPhone(number);
-        Mockito.verify(passengerRepository).existsByEmail(mail);
+        Mockito.verify(passengerRepository, Mockito.never()).existsByPhone(PHONE);
+        Mockito.verify(passengerRepository).existsByEmail(EMAIL);
     }
 
     @Test
     void save_NotUniqueUserPhone_ShouldThrowPhoneIsAlreadyExistsException() {
-        String validName = "validName";
-        String validSurname = "validSurname";
-        String mail = "email@gmail.com";
-        String number = "80291112233";
         final CreatePassengerRequest request = CreatePassengerRequest.builder()
-                .name(validName)
-                .surname(validSurname)
-                .email(mail)
-                .phone(number)
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
                 .build();
         final Passenger passenger = Passenger.builder()
-                .name(validName)
-                .surname(validSurname)
-                .email(mail)
-                .phone(number)
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
                 .active(true)
                 .build();
-        Mockito.when(passengerRepository.existsByEmail(mail)).thenReturn(false);
-        Mockito.when(passengerRepository.existsByPhone(number)).thenReturn(true);
+        Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(false);
+        Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(true);
 
         Assertions.assertThatThrownBy(() ->
                 passengerService.save(request)
-        ).isInstanceOf(PhoneIsAlreadyExistsException.class).hasMessageContaining(number);
+        ).isInstanceOf(PhoneIsAlreadyExistsException.class).hasMessageContaining(PHONE);
 
         Mockito.verify(paymentClient, Mockito.never()).createCustomer(Mockito.any(CustomerRequest.class));
         Mockito.verify(passengerMapper, Mockito.never()).toPassengerResponse(passenger);
         Mockito.verify(passengerRepository, Mockito.never()).save(Mockito.any(Passenger.class));
-        Mockito.verify(passengerRepository).existsByPhone(number);
-        Mockito.verify(passengerRepository).existsByEmail(mail);
+        Mockito.verify(passengerRepository).existsByPhone(PHONE);
+        Mockito.verify(passengerRepository).existsByEmail(EMAIL);
     }
 
     @Test
@@ -209,6 +201,70 @@ class PassengerServiceImplTest {
                 .hasMessageContaining(String.format("Passenger with %s was not found", PASSENGER_ID));
 
         Mockito.verify(passengerRepository).findById(PASSENGER_ID);
+    }
+
+    @Test
+    void update_ValidUser_ShouldUpdateUserAndSaveInRepository() {
+        final UpdatePassengerRequest request = UpdatePassengerRequest.builder()
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
+                .build();
+        final Passenger passenger = new Passenger();
+        Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(false);
+        Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(false);
+        Mockito.when(passengerRepository.save(Mockito.any(Passenger.class))).thenReturn(passenger);
+        Mockito.when(passengerRepository.findById(PASSENGER_ID)).thenReturn(Optional.of(passenger));
+
+        PassengerResponse actual = passengerService.update(PASSENGER_ID, request);
+
+        Assertions.assertThat(actual).isEqualTo(passengerMapper.toPassengerResponse(passenger));
+        Mockito.verify(passengerMapper, Mockito.times(2)).toPassengerResponse(passenger);
+        Mockito.verify(passengerRepository).save(Mockito.any(Passenger.class));
+        Mockito.verify(passengerRepository).existsByPhone(PHONE);
+        Mockito.verify(passengerRepository).existsByEmail(EMAIL);
+    }
+
+    @Test
+    void update_ExistingUserPhone_ShouldThrowPhoneIsAlreadyExistsException() {
+        final UpdatePassengerRequest request = UpdatePassengerRequest.builder()
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
+                .build();
+        final Passenger passenger = new Passenger();
+        Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(true);
+        Mockito.when(passengerRepository.findById(PASSENGER_ID)).thenReturn(Optional.of(passenger));
+
+        Assertions.assertThatThrownBy(() ->
+                passengerService.update(PASSENGER_ID, request)
+        ).isInstanceOf(PhoneIsAlreadyExistsException.class);
+        Mockito.verify(passengerRepository, Mockito.never()).save(Mockito.any(Passenger.class));
+        Mockito.verify(passengerRepository).existsByPhone(PHONE);
+        Mockito.verify(passengerRepository, Mockito.never()).existsByEmail(EMAIL);
+    }
+
+    @Test
+    void update_ExistingUserEmail_ShouldThrowEmailIsAlreadyExistsException() {
+        final UpdatePassengerRequest request = UpdatePassengerRequest.builder()
+                .name(NAME)
+                .surname(SURNAME)
+                .email(EMAIL)
+                .phone(PHONE)
+                .build();
+        final Passenger passenger = new Passenger();
+        Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(false);
+        Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(true);
+        Mockito.when(passengerRepository.findById(PASSENGER_ID)).thenReturn(Optional.of(passenger));
+
+        Assertions.assertThatThrownBy(() ->
+                passengerService.update(PASSENGER_ID, request)
+        ).isInstanceOf(EmailIsAlreadyExistsException.class);
+        Mockito.verify(passengerRepository, Mockito.never()).save(Mockito.any(Passenger.class));
+        Mockito.verify(passengerRepository).existsByPhone(PHONE);
+        Mockito.verify(passengerRepository).existsByEmail(EMAIL);
     }
 
     @Test
