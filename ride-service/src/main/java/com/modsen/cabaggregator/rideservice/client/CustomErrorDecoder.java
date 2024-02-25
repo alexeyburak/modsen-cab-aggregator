@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.rideservice.client;
 
+import com.modsen.cabaggregator.rideservice.exception.ThirdPartyEntityNotFoundException;
 import feign.FeignException;
 import feign.Response;
 import feign.RetryableException;
@@ -16,9 +17,11 @@ public class CustomErrorDecoder implements ErrorDecoder {
                     response.status(),
                     exception.getMessage(),
                     response.request().httpMethod(),
-                    exception,
-                    (Long) null,
+                    null,
                     response.request());
+        }
+        if (status == 400) {
+            throw new ThirdPartyEntityNotFoundException();
         }
         return exception;
     }

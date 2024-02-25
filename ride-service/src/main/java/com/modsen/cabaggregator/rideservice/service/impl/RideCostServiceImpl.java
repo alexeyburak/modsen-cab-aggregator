@@ -14,8 +14,8 @@ import java.math.RoundingMode;
 @RequiredArgsConstructor
 public class RideCostServiceImpl implements RideCostService {
 
-    private static final BigDecimal MIN_RIDE_COST = BigDecimal.ONE;
-    private static final BigDecimal MAX_RIDE_COST = BigDecimal.TEN;
+    private static final BigDecimal MIN_RIDE_COST = BigDecimal.valueOf(1000L);
+    private static final BigDecimal MAX_RIDE_COST = BigDecimal.valueOf(10000L);
 
     private final PromoCodeService promoCodeService;
 

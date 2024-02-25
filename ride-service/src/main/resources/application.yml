@@ -17,8 +17,9 @@ spring:
       ddl-auto: validate
     show-sql: false
   kafka:
-    bootstrap-servers: host.docker.internal:9092
+    bootstrap-servers: localhost:9092
     producer:
+      bootstrap-servers: localhost:9092
       client-id: ${spring.application.name}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer

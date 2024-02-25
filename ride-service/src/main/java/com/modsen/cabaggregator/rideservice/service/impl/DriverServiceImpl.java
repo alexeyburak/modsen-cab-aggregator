@@ -1,6 +1,7 @@
 package com.modsen.cabaggregator.rideservice.service.impl;
 
 import com.modsen.cabaggregator.rideservice.client.DriverServiceClient;
+import com.modsen.cabaggregator.rideservice.dto.DriverResponse;
 import com.modsen.cabaggregator.rideservice.model.enumeration.DriverStatus;
 import com.modsen.cabaggregator.rideservice.service.DriverService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,8 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public void changeDriverStatus(UUID id, DriverStatus status) {
-        driverClient.updateStatus(id, status);
-        log.info("Change driver status. ID: {}, New status: {}", id, status);
+        DriverResponse response = driverClient.updateStatus(id, status);
+        log.info("Change driver status. ID: {}, New status: {}", response.getId(), response.getStatus());
     }
 
 }
