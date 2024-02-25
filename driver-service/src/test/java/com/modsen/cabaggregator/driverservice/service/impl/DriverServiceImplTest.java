@@ -26,16 +26,16 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
+import static com.modsen.cabaggregator.driverservice.util.DriverServiceUtils.DRIVER_ID;
+import static com.modsen.cabaggregator.driverservice.util.DriverServiceUtils.DRIVER_WAS_NOT_FOUND;
+import static com.modsen.cabaggregator.driverservice.util.DriverServiceUtils.PHONE;
+import static com.modsen.cabaggregator.driverservice.util.DriverServiceUtils.buildCreateDriverRequest;
+import static com.modsen.cabaggregator.driverservice.util.DriverServiceUtils.buildDriver;
+import static com.modsen.cabaggregator.driverservice.util.DriverServiceUtils.buildUpdateDriverRequest;
 
 @ExtendWith(MockitoExtension.class)
 class DriverServiceImplTest {
-
-    private static final String DRIVER_WAS_NOT_FOUND = "Driver with id %s was not found";
-    private static final UUID DRIVER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-    private static final String NAME = "name";
-    private static final String SURNAME = "surname";
-    private static final String PHONE = "80291112233";
 
     @InjectMocks
     private DriverServiceImpl driverService;
@@ -79,17 +79,8 @@ class DriverServiceImplTest {
 
     @Test
     void save_ValidUser_ShouldSaveDriverToRepository() {
-        final CreateDriverRequest request = CreateDriverRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .phone(PHONE)
-                .build();
-        final Driver driver = Driver.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .phone(PHONE)
-                .active(true)
-                .build();
+        final CreateDriverRequest request = buildCreateDriverRequest();
+        final Driver driver = buildDriver();
         Mockito.when(driverRepository.existsByPhone(PHONE)).thenReturn(false);
         Mockito.when(driverRepository.save(Mockito.any(Driver.class))).thenReturn(driver);
 
@@ -103,17 +94,8 @@ class DriverServiceImplTest {
 
     @Test
     void save_NotUniqueDriverPhone_ShouldThrowPhoneIsAlreadyExistsException() {
-        final CreateDriverRequest request = CreateDriverRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .phone(PHONE)
-                .build();
-        final Driver driver = Driver.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .phone(PHONE)
-                .active(true)
-                .build();
+        final CreateDriverRequest request = buildCreateDriverRequest();
+        final Driver driver = buildDriver();
         Mockito.when(driverRepository.existsByPhone(PHONE)).thenReturn(true);
 
         Assertions.assertThatThrownBy(() ->
@@ -160,11 +142,7 @@ class DriverServiceImplTest {
 
     @Test
     void update_ValidDriver_ShouldUpdateDriverAndSaveInRepository() {
-        final UpdateDriverRequest request = UpdateDriverRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .phone(PHONE)
-                .build();
+        final UpdateDriverRequest request = buildUpdateDriverRequest();
         final Driver driver = new Driver();
         Mockito.when(driverRepository.existsByPhone(PHONE)).thenReturn(false);
         Mockito.when(driverRepository.save(Mockito.any(Driver.class))).thenReturn(driver);
@@ -180,11 +158,7 @@ class DriverServiceImplTest {
 
     @Test
     void update_ExistingDriverPhone_ShouldThrowPhoneIsAlreadyExistsException() {
-        final UpdateDriverRequest request = UpdateDriverRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .phone(PHONE)
-                .build();
+        final UpdateDriverRequest request = buildUpdateDriverRequest();
         final Driver driver = new Driver();
         Mockito.when(driverRepository.existsByPhone(PHONE)).thenReturn(true);
         Mockito.when(driverRepository.findById(DRIVER_ID)).thenReturn(Optional.of(driver));
@@ -198,7 +172,7 @@ class DriverServiceImplTest {
 
     @Test
     void findEntityById_DriverExists_ShouldReturnDriver() {
-        final Driver driver = new Driver();
+        final Driver driver = buildDriver();
         Mockito.when(driverRepository.findById(DRIVER_ID)).thenReturn(Optional.of(driver));
 
         Driver actual = driverService.findEntityById(DRIVER_ID);
