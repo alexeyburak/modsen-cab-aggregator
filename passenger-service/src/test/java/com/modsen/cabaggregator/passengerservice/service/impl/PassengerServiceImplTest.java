@@ -29,17 +29,17 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.EMAIL;
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.PASSENGER_ID;
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.PASSENGER_WAS_NOT_FOUND;
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.PHONE;
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.buildCreatePassengerRequest;
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.buildPassenger;
+import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.buildUpdatePassengerRequest;
 
 @ExtendWith(MockitoExtension.class)
 class PassengerServiceImplTest {
-
-    public static final String PASSENGER_WAS_NOT_FOUND = "Passenger with %s was not found";
-    private static final UUID PASSENGER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-    private static final String NAME = "name";
-    private static final String SURNAME = "surname";
-    private static final String EMAIL = "email@gmail.com";
-    private static final String PHONE = "80291112233";
 
     @InjectMocks
     private PassengerServiceImpl passengerService;
@@ -86,19 +86,8 @@ class PassengerServiceImplTest {
 
     @Test
     void save_ValidUser_ShouldSaveUserToRepository() {
-        final CreatePassengerRequest request = CreatePassengerRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .build();
-        final Passenger passenger = Passenger.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .active(true)
-                .build();
+        final CreatePassengerRequest request = buildCreatePassengerRequest();
+        final Passenger passenger = buildPassenger();
         Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(false);
         Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(false);
         Mockito.when(passengerRepository.save(Mockito.any(Passenger.class))).thenReturn(passenger);
@@ -115,19 +104,8 @@ class PassengerServiceImplTest {
 
     @Test
     void save_NotUniqueUserMail_ShouldThrowEmailIsAlreadyExistsException() {
-        final CreatePassengerRequest request = CreatePassengerRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .build();
-        final Passenger passenger = Passenger.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .active(true)
-                .build();
+        final CreatePassengerRequest request = buildCreatePassengerRequest();
+        final Passenger passenger = buildPassenger();
         Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(true);
 
         Assertions.assertThatThrownBy(() ->
@@ -143,19 +121,8 @@ class PassengerServiceImplTest {
 
     @Test
     void save_NotUniqueUserPhone_ShouldThrowPhoneIsAlreadyExistsException() {
-        final CreatePassengerRequest request = CreatePassengerRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .build();
-        final Passenger passenger = Passenger.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .active(true)
-                .build();
+        final CreatePassengerRequest request = buildCreatePassengerRequest();
+        final Passenger passenger = buildPassenger();
         Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(false);
         Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(true);
 
@@ -205,12 +172,7 @@ class PassengerServiceImplTest {
 
     @Test
     void update_ValidUser_ShouldUpdateUserAndSaveInRepository() {
-        final UpdatePassengerRequest request = UpdatePassengerRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .build();
+        final UpdatePassengerRequest request = buildUpdatePassengerRequest();
         final Passenger passenger = new Passenger();
         Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(false);
         Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(false);
@@ -228,12 +190,7 @@ class PassengerServiceImplTest {
 
     @Test
     void update_ExistingUserPhone_ShouldThrowPhoneIsAlreadyExistsException() {
-        final UpdatePassengerRequest request = UpdatePassengerRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .build();
+        final UpdatePassengerRequest request = buildUpdatePassengerRequest();
         final Passenger passenger = new Passenger();
         Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(true);
         Mockito.when(passengerRepository.findById(PASSENGER_ID)).thenReturn(Optional.of(passenger));
@@ -248,12 +205,7 @@ class PassengerServiceImplTest {
 
     @Test
     void update_ExistingUserEmail_ShouldThrowEmailIsAlreadyExistsException() {
-        final UpdatePassengerRequest request = UpdatePassengerRequest.builder()
-                .name(NAME)
-                .surname(SURNAME)
-                .email(EMAIL)
-                .phone(PHONE)
-                .build();
+        final UpdatePassengerRequest request = buildUpdatePassengerRequest();
         final Passenger passenger = new Passenger();
         Mockito.when(passengerRepository.existsByPhone(PHONE)).thenReturn(false);
         Mockito.when(passengerRepository.existsByEmail(EMAIL)).thenReturn(true);
