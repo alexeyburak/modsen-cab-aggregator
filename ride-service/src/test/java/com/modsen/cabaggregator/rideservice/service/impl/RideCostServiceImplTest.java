@@ -24,7 +24,7 @@ class RideCostServiceImplTest {
     private RideCostServiceImpl rideCostService;
 
     @Test
-    void testGetInitialRideCost() {
+    void getInitialRideCost_ShouldReturnRandomValue() {
         final BigDecimal actual = rideCostService.getInitialRideCost();
 
         Assertions.assertThat(actual)
@@ -33,7 +33,7 @@ class RideCostServiceImplTest {
     }
 
     @Test
-    void testGetFinalRideCostWithPromo_WithoutPromo() {
+    void getFinalRideCostWithPromo_EmptyPromo_ShouldReturnInitialRideCode() {
         final BigDecimal initialCost = BigDecimal.valueOf(2000L);
         final String promo = "";
 
@@ -43,7 +43,7 @@ class RideCostServiceImplTest {
     }
 
     @Test
-    void testGetFinalRideCostWithPromo_WithPromo() {
+    void getFinalRideCostWithPromo_ExistingPromo_ShouldSubtractPromoPriceFromRidePrice() {
         final String promo = "promo-1";
         final BigDecimal promoCodeValue = BigDecimal.valueOf(500L);
         final BigDecimal initial = BigDecimal.valueOf(2000L);
