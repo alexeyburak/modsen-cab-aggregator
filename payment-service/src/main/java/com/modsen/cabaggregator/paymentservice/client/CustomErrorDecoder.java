@@ -1,5 +1,6 @@
 package com.modsen.cabaggregator.paymentservice.client;
 
+import com.modsen.cabaggregator.paymentservice.exception.ThirdPartyApiException;
 import feign.FeignException;
 import feign.Response;
 import feign.RetryableException;
@@ -16,9 +17,11 @@ public class CustomErrorDecoder implements ErrorDecoder {
                     response.status(),
                     exception.getMessage(),
                     response.request().httpMethod(),
-                    exception,
-                    (Long) null,
+                    null,
                     response.request());
+        }
+        if (status == 400) {
+            throw new ThirdPartyApiException();
         }
         return exception;
     }

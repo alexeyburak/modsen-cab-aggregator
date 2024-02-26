@@ -18,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -80,7 +79,7 @@ public class DriverController {
     }
 
     @Operation(description = "Update driver status by ID")
-    @PatchMapping(Constants.ID_MAPPING + Constants.STATUS_MAPPING)
+    @PutMapping(Constants.ID_MAPPING + Constants.STATUS_MAPPING)
     public DriverResponse updateStatus(@PathVariable UUID id, @RequestParam DriverStatus status) {
         return driverService.updateStatus(id, status);
     }

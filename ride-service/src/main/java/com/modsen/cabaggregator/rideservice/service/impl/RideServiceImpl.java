@@ -156,7 +156,7 @@ public class RideServiceImpl implements RideService {
 
         saveRideAndUpdateDriverStatus(ride, DriverStatus.AVAILABLE);
         sendEmailNotification(NotificationType.FINISH_RIDE, ride.getPassengerId());
-        log.info("Start ride. ID: {}", id);
+        log.info("Finish ride. ID: {}", id);
         return new MessageResponse(
                 MessageResponseCode.FINISH_RIDE.getGlobalCode()
         );

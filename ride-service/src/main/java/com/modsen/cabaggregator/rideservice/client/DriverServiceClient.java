@@ -4,8 +4,8 @@ import com.modsen.cabaggregator.rideservice.dto.DriverResponse;
 import com.modsen.cabaggregator.rideservice.model.enumeration.DriverStatus;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
@@ -20,7 +20,7 @@ public interface DriverServiceClient {
     @GetMapping("/available")
     DriverResponse findAvailableDriverById();
 
-    @PatchMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     DriverResponse updateStatus(@PathVariable UUID id, @RequestParam DriverStatus status);
 
     @GetMapping("/{id}")
