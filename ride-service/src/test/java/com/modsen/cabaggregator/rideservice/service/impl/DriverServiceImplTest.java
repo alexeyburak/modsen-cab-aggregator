@@ -41,6 +41,12 @@ class DriverServiceImplTest {
     @Test
     void changeDriverStatus_ShouldCallDriverClientMethod() {
         final UUID id = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        Mockito.when(driverServiceClient.updateStatus(id, DriverStatus.AVAILABLE)).thenReturn(
+                DriverResponse.builder()
+                        .id(id)
+                        .status(DriverStatus.AVAILABLE)
+                        .build()
+        );
 
         driverService.changeDriverStatus(id, DriverStatus.AVAILABLE);
 
