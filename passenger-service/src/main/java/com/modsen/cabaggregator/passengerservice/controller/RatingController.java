@@ -30,27 +30,21 @@ public class RatingController {
 
     @Operation(description = "Rate passenger by ID")
     @PostMapping
-    public ResponseEntity<RatingResponse> rate(@Valid @RequestBody CreateRatingRequest request,
-                                               @PathVariable UUID id) {
-        return ResponseEntity.ok(
-                ratingService.rate(request, id)
-        );
+    public RatingResponse rate(@Valid @RequestBody CreateRatingRequest request,
+                               @PathVariable UUID id) {
+        return ratingService.rate(request, id);
     }
 
     @Operation(description = "Get all passengers ratings by ID")
     @GetMapping
-    public ResponseEntity<AllRatingsResponse> getRatingsByPassengerId(@PathVariable UUID id) {
-        return ResponseEntity.ok(
-                ratingService.getRatingsByPassengerId(id)
-        );
+    public AllRatingsResponse getRatingsByPassengerId(@PathVariable UUID id) {
+        return ratingService.getRatingsByPassengerId(id);
     }
 
     @Operation(description = "Get passenger average rating by ID")
     @GetMapping(Constants.AVERAGE_MAPPING)
-    public ResponseEntity<AverageRatingResponse> getAverageRating(@PathVariable UUID id) {
-        return ResponseEntity.ok(
-                ratingService.getAveragePassengerRating(id)
-        );
+    public AverageRatingResponse getAverageRating(@PathVariable UUID id) {
+        return ratingService.getAveragePassengerRating(id);
     }
 
 }

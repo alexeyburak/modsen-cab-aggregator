@@ -1,6 +1,7 @@
 package com.modsen.cabaggregator.passengerservice.util;
 
 import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
+import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
 import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import lombok.experimental.UtilityClass;
@@ -8,9 +9,10 @@ import lombok.experimental.UtilityClass;
 import java.util.UUID;
 
 @UtilityClass
-public class UnitTestUtils {
+public class TestUtils {
     public static final String PASSENGER_WAS_NOT_FOUND = "Passenger with %s was not found";
     public static final UUID PASSENGER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    public static final UUID DRIVER_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
     public static final String NAME = "name";
     public static final String SURNAME = "surname";
     public static final String EMAIL = "email@gmail.com";
@@ -41,6 +43,13 @@ public class UnitTestUtils {
                 .surname(SURNAME)
                 .email(EMAIL)
                 .phone(PHONE)
+                .build();
+    }
+
+    public static CreateRatingRequest buildCreateRatingRequest() {
+        return CreateRatingRequest.builder()
+                .score(1)
+                .driverId(DRIVER_ID)
                 .build();
     }
 

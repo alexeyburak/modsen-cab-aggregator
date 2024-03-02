@@ -30,13 +30,13 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
 
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.EMAIL;
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.PASSENGER_ID;
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.PASSENGER_WAS_NOT_FOUND;
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.PHONE;
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.buildCreatePassengerRequest;
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.buildPassenger;
-import static com.modsen.cabaggregator.passengerservice.util.UnitTestUtils.buildUpdatePassengerRequest;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.EMAIL;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.PASSENGER_ID;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.PASSENGER_WAS_NOT_FOUND;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.PHONE;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.buildCreatePassengerRequest;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.buildPassenger;
+import static com.modsen.cabaggregator.passengerservice.util.TestUtils.buildUpdatePassengerRequest;
 
 @ExtendWith(MockitoExtension.class)
 class PassengerServiceImplTest {
