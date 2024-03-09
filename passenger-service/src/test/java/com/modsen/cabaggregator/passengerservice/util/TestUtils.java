@@ -2,6 +2,7 @@ package com.modsen.cabaggregator.passengerservice.util;
 
 import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.CreateRatingRequest;
+import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import lombok.experimental.UtilityClass;
@@ -27,6 +28,15 @@ public class TestUtils {
                 .build();
     }
 
+    public static CreatePassengerRequest buildCreatePassengerRequest(String name, String surname, String email, String phone) {
+        return CreatePassengerRequest.builder()
+                .name(name)
+                .surname(surname)
+                .email(email)
+                .phone(phone)
+                .build();
+    }
+
     public static Passenger buildPassenger() {
         return Passenger.builder()
                 .name(NAME)
@@ -46,10 +56,29 @@ public class TestUtils {
                 .build();
     }
 
+    public static UpdatePassengerRequest buildUpdatePassengerRequest(String name, String surname, String email, String phone) {
+        return UpdatePassengerRequest.builder()
+                .name(name)
+                .surname(surname)
+                .email(email)
+                .phone(phone)
+                .build();
+    }
+
     public static CreateRatingRequest buildCreateRatingRequest() {
         return CreateRatingRequest.builder()
                 .score(1)
                 .driverId(DRIVER_ID)
+                .build();
+    }
+
+    public static PassengerResponse buildPassengerResponse(UUID id, String name, String surname, String email, String phone) {
+        return PassengerResponse.builder()
+                .id(id)
+                .name(name)
+                .surname(surname)
+                .email(email)
+                .phone(phone)
                 .build();
     }
 

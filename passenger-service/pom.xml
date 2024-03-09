@@ -24,6 +24,7 @@
         <spring-cloud-starter-openfeign.version>4.1.0</spring-cloud-starter-openfeign.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <org.testcontainers.version>1.17.3</org.testcontainers.version>
+        <cucumber.version>7.15.0</cucumber.version>
     </properties>
 
     <dependencyManagement>
@@ -84,6 +85,22 @@
             <artifactId>postgresql</artifactId>
             <version>${org.testcontainers.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
         </dependency>
 
         <!--		OPEN API-->
