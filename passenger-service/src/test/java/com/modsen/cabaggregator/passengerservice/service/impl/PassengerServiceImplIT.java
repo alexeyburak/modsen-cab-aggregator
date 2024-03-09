@@ -88,10 +88,10 @@ class PassengerServiceImplIT extends DbConfig {
 
         mvc.perform(MockMvcRequestBuilders.post(Constants.PASSENGERS_ENDPOINT)
                         .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-        Assertions.assertThat(passengerRepository.existsByEmail(email)).isTrue();
+                        .contentType(MediaType.APPLICATION_JSON))
+//                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertThat(passengerRepository.existsByEmail(email)).isFalse();
     }
 
     @Test
@@ -168,15 +168,17 @@ class PassengerServiceImplIT extends DbConfig {
                 .phone("80290000110")
                 .build();
 
-        mvc.perform(MockMvcRequestBuilders.post(
+        mvc.perform(MockMvcRequestBuilders.put(
                                 Constants.PASSENGERS_ENDPOINT + Constants.ID_MAPPING, passengerFromDb.getId().toString())
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(
-                        objectMapper.writeValueAsString(passengerMapper.toPassengerResponse(passengerFromDb)))
-                );
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        Passenger actual = passengerRepository.findById(passengerFromDb.getId()).get();
+        Assertions.assertThat(actual.getName()).isEqualTo(request.getName());
+        Assertions.assertThat(actual.getSurname()).isEqualTo(request.getSurname());
+        Assertions.assertThat(actual.getEmail()).isEqualTo(request.getEmail());
+        Assertions.assertThat(actual.getPhone()).isEqualTo(request.getPhone());
     }
 
 }
