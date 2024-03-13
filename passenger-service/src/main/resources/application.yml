@@ -21,7 +21,7 @@ feign:
     config:
       payment:
         name: payment-service
-        url: http://localhost:8084
+        url: http://payment-service:8084
         path: /api/v1/payments
 eureka:
   client:

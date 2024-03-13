@@ -25,7 +25,7 @@ feign:
     config:
       ride:
         name: ride-service
-        url: http://localhost:8083
+        url: http://ride-service:8083
         path: /api/v1/rides
 eureka:
   client:
