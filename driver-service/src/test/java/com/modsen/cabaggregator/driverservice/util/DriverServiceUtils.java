@@ -2,8 +2,10 @@ package com.modsen.cabaggregator.driverservice.util;
 
 import com.modsen.cabaggregator.driverservice.dto.CreateDriverRequest;
 import com.modsen.cabaggregator.driverservice.dto.CreateRatingRequest;
+import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
 import com.modsen.cabaggregator.driverservice.dto.UpdateDriverRequest;
 import com.modsen.cabaggregator.driverservice.model.Driver;
+import com.modsen.cabaggregator.driverservice.model.enumeration.DriverStatus;
 import lombok.experimental.UtilityClass;
 
 import java.util.UUID;
@@ -25,6 +27,14 @@ public class DriverServiceUtils {
                 .build();
     }
 
+    public static CreateDriverRequest buildCreateDriverRequest(String name, String surname, String phone) {
+        return CreateDriverRequest.builder()
+                .name(name)
+                .surname(surname)
+                .phone(phone)
+                .build();
+    }
+
     public static Driver buildDriver() {
         return Driver.builder()
                 .name(NAME)
@@ -42,10 +52,30 @@ public class DriverServiceUtils {
                 .build();
     }
 
+    public static UpdateDriverRequest buildUpdateDriverRequest(String name, String surname, DriverStatus status, String phone) {
+        return UpdateDriverRequest.builder()
+                .name(name)
+                .surname(surname)
+                .status(status)
+                .phone(phone)
+                .build();
+    }
+
     public static CreateRatingRequest buildCreateRatingRequest() {
         return CreateRatingRequest.builder()
                 .score(1)
                 .passengerId(PASSENGER_ID)
+                .build();
+    }
+
+    public static DriverResponse buildDriverResponse(UUID id, String name, String surname, DriverStatus status, String phone) {
+        return DriverResponse.builder()
+                .id(id)
+                .name(name)
+                .surname(surname)
+                .phone(phone)
+                .status(status)
+                .active(true)
                 .build();
     }
 
