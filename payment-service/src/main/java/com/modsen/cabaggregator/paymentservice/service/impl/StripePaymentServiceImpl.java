@@ -1,6 +1,5 @@
 package com.modsen.cabaggregator.paymentservice.service.impl;
 
-import com.modsen.cabaggregator.paymentservice.client.RideServiceClient;
 import com.modsen.cabaggregator.paymentservice.dto.BalanceResponse;
 import com.modsen.cabaggregator.paymentservice.dto.CardRequest;
 import com.modsen.cabaggregator.paymentservice.dto.ChargeRequest;
@@ -17,6 +16,7 @@ import com.modsen.cabaggregator.paymentservice.exception.InsufficientBalanceExce
 import com.modsen.cabaggregator.paymentservice.model.PassengerCustomer;
 import com.modsen.cabaggregator.paymentservice.repository.CustomerRepository;
 import com.modsen.cabaggregator.paymentservice.service.PaymentService;
+import com.modsen.cabaggregator.paymentservice.service.RideService;
 import com.modsen.cabaggregator.paymentservice.service.StripeModelsBuilderService;
 import com.modsen.cabaggregator.paymentservice.util.StripeParamsBuilder;
 import com.stripe.model.Balance;
@@ -39,7 +39,7 @@ public class StripePaymentServiceImpl implements PaymentService {
 
     private final CustomerRepository customerRepository;
     private final StripeModelsBuilderService modelsBuilderService;
-    private final RideServiceClient rideClient;
+    private final RideService rideService;
 
     @Transactional
     @Override
@@ -154,11 +154,11 @@ public class StripePaymentServiceImpl implements PaymentService {
     }
 
     private RideInfoResponse getRideById(UUID rideId) {
-        return rideClient.getRideById(rideId);
+        return rideService.getRideById(rideId);
     }
 
     private void changeRideStatus(UUID id) {
-        rideClient.changeStatus(id);
+        rideService.changeStatus(id);
     }
 
     private void validateIsCustomerAlreadyExist(CustomerRequest request) {

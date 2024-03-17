@@ -22,6 +22,24 @@ feign:
       payment:
         name: payment-service
         path: /api/v1/payments
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        slidingWindowSize: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+  retry:
+    instances:
+      default:
+        maxAttempts: 3
+        waitDuration: 10s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
 eureka:
   client:
     serviceUrl:

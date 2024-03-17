@@ -25,9 +25,4 @@ public class AppConfig {
         return new CustomErrorDecoder();
     }
 
-    @Bean
-    public Retryer retryer() {
-        return new CustomRetryer();
-    }
-
 }
