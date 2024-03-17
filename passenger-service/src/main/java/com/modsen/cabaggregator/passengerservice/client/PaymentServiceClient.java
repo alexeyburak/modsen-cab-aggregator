@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(
         value = "${feign.client.config.payment.name}",
-        url = "${feign.client.config.payment.url}",
         path = "${feign.client.config.payment.path}"
 )
 public interface PaymentServiceClient {

@@ -4,7 +4,7 @@ spring:
   application:
     name: driver-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5445/drivers}
+    url: ${DB_URL:jdbc:postgresql://db-drivers:5445/drivers}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:
@@ -19,7 +19,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-server:8761/eureka/
     initialInstanceInfoReplicationIntervalSeconds: 5
     registryFetchIntervalSeconds: 5
   instance:

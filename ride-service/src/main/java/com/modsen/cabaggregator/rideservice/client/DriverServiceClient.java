@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @FeignClient(
         value = "${feign.client.config.driver.name}",
-        url = "${feign.client.config.driver.url}",
         path = "${feign.client.config.driver.path}"
 )
 public interface DriverServiceClient {

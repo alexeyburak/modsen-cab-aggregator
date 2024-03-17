@@ -4,7 +4,7 @@ spring:
   application:
     name: ride-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5446/rides}
+    url: ${DB_URL:jdbc:postgresql://db-rides:5446/rides}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:
@@ -17,9 +17,9 @@ spring:
       ddl-auto: validate
     show-sql: false
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: host.docker.internal:9092
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: host.docker.internal:9092
       client-id: ${spring.application.name}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -29,16 +29,14 @@ feign:
     config:
       driver:
         name: driver-service
-        url: http://driver-service:8082
         path: /api/v1/drivers
       passenger:
         name: passenger-service
-        url: http://passenger-service:8081
         path: /api/v1/passengers
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-server:8761/eureka/
     initialInstanceInfoReplicationIntervalSeconds: 5
     registryFetchIntervalSeconds: 5
   instance:

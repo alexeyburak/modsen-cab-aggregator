@@ -4,7 +4,7 @@ spring:
   application:
     name: passenger-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5444/passengers}
+    url: ${DB_URL:jdbc:postgresql://db-passengers:5444/passengers}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:
@@ -21,12 +21,11 @@ feign:
     config:
       payment:
         name: payment-service
-        url: http://payment-service:8084
         path: /api/v1/payments
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-server:8761/eureka/
     initialInstanceInfoReplicationIntervalSeconds: 5
     registryFetchIntervalSeconds: 5
   instance:
