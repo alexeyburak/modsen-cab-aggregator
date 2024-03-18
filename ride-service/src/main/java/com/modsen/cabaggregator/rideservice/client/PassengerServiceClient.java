@@ -9,7 +9,6 @@ import java.util.UUID;
 
 @FeignClient(
         value = "${feign.client.config.passenger.name}",
-        url = "${feign.client.config.passenger.url}",
         path = "${feign.client.config.passenger.path}"
 )
 public interface PassengerServiceClient {

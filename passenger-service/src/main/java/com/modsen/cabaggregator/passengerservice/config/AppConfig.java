@@ -1,8 +1,6 @@
 package com.modsen.cabaggregator.passengerservice.config;
 
 import com.modsen.cabaggregator.passengerservice.client.CustomErrorDecoder;
-import com.modsen.cabaggregator.passengerservice.client.CustomRetryer;
-import feign.Retryer;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -23,11 +21,6 @@ public class AppConfig {
     @Bean
     public ErrorDecoder errorDecoder() {
         return new CustomErrorDecoder();
-    }
-
-    @Bean
-    public Retryer retryer() {
-        return new CustomRetryer();
     }
 
 }

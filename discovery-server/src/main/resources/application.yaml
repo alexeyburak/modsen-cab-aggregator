@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: discovery-server
+server:
+  port: 8761
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    waitTimeInMsWhenSyncEmpty: 100
+    response-cache-update-interval-ms: 5000

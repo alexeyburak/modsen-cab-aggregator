@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @FeignClient(
         value = "${feign.client.config.ride.name}",
-        url = "${feign.client.config.ride.url}",
         path = "${feign.client.config.ride.path}"
 )
 public interface RideServiceClient {

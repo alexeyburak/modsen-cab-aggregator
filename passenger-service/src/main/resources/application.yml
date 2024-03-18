@@ -4,7 +4,7 @@ spring:
   application:
     name: passenger-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5444/passengers}
+    url: ${DB_URL:jdbc:postgresql://db-passengers:5444/passengers}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     dbcp2:
@@ -21,5 +21,31 @@ feign:
     config:
       payment:
         name: payment-service
-        url: http://localhost:8084
         path: /api/v1/payments
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        slidingWindowSize: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+  retry:
+    instances:
+      default:
+        maxAttempts: 3
+        waitDuration: 10s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka/
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 5

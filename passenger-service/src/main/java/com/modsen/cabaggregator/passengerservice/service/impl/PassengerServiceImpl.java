@@ -2,7 +2,6 @@ package com.modsen.cabaggregator.passengerservice.service.impl;
 
 import com.modsen.cabaggregator.common.util.GlobalConstants;
 import com.modsen.cabaggregator.common.util.PageRequestValidator;
-import com.modsen.cabaggregator.passengerservice.client.PaymentServiceClient;
 import com.modsen.cabaggregator.passengerservice.dto.AllPassengersResponse;
 import com.modsen.cabaggregator.passengerservice.dto.CreatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.CustomerRequest;
@@ -16,6 +15,7 @@ import com.modsen.cabaggregator.passengerservice.mapper.PassengerMapper;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import com.modsen.cabaggregator.passengerservice.repository.PassengerRepository;
 import com.modsen.cabaggregator.passengerservice.service.PassengerService;
+import com.modsen.cabaggregator.passengerservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,7 +37,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
-    private final PaymentServiceClient paymentClient;
+    private final PaymentService paymentService;
 
     @Override
     public AllPassengersResponse findAll(Integer page, Integer size, PassengerSortCriteria sort) {
@@ -120,7 +120,7 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     private void createCustomer(CreatePassengerRequest request, UUID passengerId) {
-        paymentClient.createCustomer(
+        paymentService.createCustomer(
                 CustomerRequest.builder()
                         .name(request.getName())
                         .email(request.getEmail())

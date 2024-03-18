@@ -2,8 +2,6 @@ package com.modsen.cabaggregator.rideservice.service.impl;
 
 import com.modsen.cabaggregator.common.util.NotificationType;
 import com.modsen.cabaggregator.common.util.PageRequestValidator;
-import com.modsen.cabaggregator.rideservice.client.DriverServiceClient;
-import com.modsen.cabaggregator.rideservice.client.PassengerServiceClient;
 import com.modsen.cabaggregator.rideservice.dto.AllRidesResponse;
 import com.modsen.cabaggregator.rideservice.dto.CreateRideRequest;
 import com.modsen.cabaggregator.rideservice.dto.MessageResponse;
@@ -20,8 +18,9 @@ import com.modsen.cabaggregator.rideservice.model.enumeration.DriverStatus;
 import com.modsen.cabaggregator.rideservice.model.enumeration.MessageResponseCode;
 import com.modsen.cabaggregator.rideservice.model.enumeration.RideStatus;
 import com.modsen.cabaggregator.rideservice.repository.RideRepository;
-import com.modsen.cabaggregator.rideservice.service.NotificationBrokerService;
 import com.modsen.cabaggregator.rideservice.service.DriverService;
+import com.modsen.cabaggregator.rideservice.service.NotificationBrokerService;
+import com.modsen.cabaggregator.rideservice.service.PassengerService;
 import com.modsen.cabaggregator.rideservice.service.RideCostService;
 import com.modsen.cabaggregator.rideservice.service.RideService;
 import lombok.RequiredArgsConstructor;
@@ -43,10 +42,9 @@ public class RideServiceImpl implements RideService {
 
     private final RideRepository rideRepository;
     private final DriverService driverService;
+    private final PassengerService passengerService;
     private final RideCostService rideCostService;
     private final RideMapper rideMapper;
-    private final DriverServiceClient driverClient;
-    private final PassengerServiceClient passengerClient;
     private final NotificationBrokerService notificationService;
 
     @Override
@@ -73,8 +71,8 @@ public class RideServiceImpl implements RideService {
         Ride ride = findEntityById(id);
         return rideMapper.toRideInfoResponse(
                 ride,
-                driverClient.findById(ride.getDriverId()),
-                passengerClient.findById(ride.getPassengerId())
+                driverService.findById(ride.getDriverId()),
+                passengerService.findById(ride.getPassengerId())
         );
     }
 
@@ -107,8 +105,8 @@ public class RideServiceImpl implements RideService {
                                 .paymentMethod(request.getPaymentMethod())
                                 .paid(false)
                                 .build()),
-                driverClient.findById(availableDriverId),
-                passengerClient.findById(passengerId)
+                driverService.findById(availableDriverId),
+                passengerService.findById(passengerId)
         );
     }
 
@@ -172,8 +170,8 @@ public class RideServiceImpl implements RideService {
         log.info("Change ride status. ID: {}, Status: {}", id, RideStatus.PAID);
         return rideMapper.toRideInfoResponse(
                 rideRepository.save(ride),
-                driverClient.findById(ride.getDriverId()),
-                passengerClient.findById(ride.getPassengerId())
+                driverService.findById(ride.getDriverId()),
+                passengerService.findById(ride.getPassengerId())
         );
     }
 
@@ -190,7 +188,7 @@ public class RideServiceImpl implements RideService {
     private void sendEmailNotification(NotificationType type, UUID passengerId) {
         notificationService.send(
                 type.getBrokerTopic(),
-                new NotificationDto(passengerClient.findById(passengerId).getEmail())
+                new NotificationDto(passengerService.findById(passengerId).getEmail())
         );
     }
 

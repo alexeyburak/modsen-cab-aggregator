@@ -25,6 +25,7 @@
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <org.testcontainers.version>1.17.3</org.testcontainers.version>
         <cucumber.version>7.15.0</cucumber.version>
+        <circuit-breaker.version>3.1.0</circuit-breaker.version>
     </properties>
 
     <dependencyManagement>
@@ -40,16 +41,20 @@
     </dependencyManagement>
 
     <dependencies>
-        <!--		VALIDATION-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
         <!--		WEB-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <!--		VALIDATION-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
         <!--		DATA-->
@@ -135,6 +140,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>${spring-cloud-starter-openfeign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+            <version>${circuit-breaker.version}</version>
         </dependency>
     </dependencies>
 
