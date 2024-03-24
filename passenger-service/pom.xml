@@ -26,6 +26,7 @@
         <org.testcontainers.version>1.17.3</org.testcontainers.version>
         <cucumber.version>7.15.0</cucumber.version>
         <circuit-breaker.version>3.1.0</circuit-breaker.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
     </properties>
 
     <dependencyManagement>
@@ -145,6 +146,30 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
             <version>${circuit-breaker.version}</version>
+        </dependency>
+
+        <!--        MONITORING-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.reporter2</groupId>
+            <artifactId>zipkin-reporter-brave</artifactId>
         </dependency>
     </dependencies>
 

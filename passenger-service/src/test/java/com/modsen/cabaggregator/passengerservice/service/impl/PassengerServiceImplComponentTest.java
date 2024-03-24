@@ -10,6 +10,7 @@ import com.modsen.cabaggregator.passengerservice.mapper.PassengerMapper;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import com.modsen.cabaggregator.passengerservice.model.enumeration.PassengerSortField;
 import com.modsen.cabaggregator.passengerservice.repository.PassengerRepository;
+import com.modsen.cabaggregator.passengerservice.service.PaymentService;
 import com.modsen.cabaggregator.passengerservice.util.TestUtils;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -48,6 +49,9 @@ public class PassengerServiceImplComponentTest {
 
     @Mock
     private PaymentServiceClient paymentClient;
+
+    @Mock
+    private PaymentService paymentService;
 
     private AllPassengersResponse allPassengersResponse;
     private CreatePassengerRequest createPassengerRequest;

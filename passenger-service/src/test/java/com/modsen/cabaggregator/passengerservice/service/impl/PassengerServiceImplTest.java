@@ -14,6 +14,7 @@ import com.modsen.cabaggregator.passengerservice.mapper.PassengerMapper;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
 import com.modsen.cabaggregator.passengerservice.model.enumeration.PassengerSortField;
 import com.modsen.cabaggregator.passengerservice.repository.PassengerRepository;
+import com.modsen.cabaggregator.passengerservice.service.PaymentService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,9 @@ class PassengerServiceImplTest {
 
     @Mock
     private PaymentServiceClient paymentClient;
+
+    @Mock
+    private PaymentService paymentService;
 
     private int page;
     private int size;
@@ -95,7 +99,7 @@ class PassengerServiceImplTest {
         PassengerResponse actual = passengerService.save(request);
 
         Assertions.assertThat(actual).isEqualTo(passengerMapper.toPassengerResponse(passenger));
-        Mockito.verify(paymentClient).createCustomer(Mockito.any(CustomerRequest.class));
+        Mockito.verify(paymentService).createCustomer(Mockito.any(CustomerRequest.class));
         Mockito.verify(passengerMapper, Mockito.times(2)).toPassengerResponse(passenger);
         Mockito.verify(passengerRepository).save(Mockito.any(Passenger.class));
         Mockito.verify(passengerRepository).existsByPhone(PHONE);
