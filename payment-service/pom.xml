@@ -24,6 +24,7 @@
         <spring-cloud-starter-openfeign.version>4.1.0</spring-cloud-starter-openfeign.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <circuit-breaker.version>3.1.0</circuit-breaker.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
     </properties>
 
     <dependencyManagement>
@@ -118,6 +119,11 @@
         </dependency>
 
         <!--        MONITORING-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
