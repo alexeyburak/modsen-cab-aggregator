@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ public class RatingController {
 
     private final RatingService ratingService;
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
     @Operation(description = "Rate passenger by ID")
     @PostMapping
     public RatingResponse rate(@Valid @RequestBody CreateRatingRequest request,
@@ -35,6 +37,7 @@ public class RatingController {
         return ratingService.rate(request, id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER', 'ROLE_ADMIN')")
     @Operation(description = "Get all passengers ratings by ID")
     @GetMapping
     public AllRatingsResponse getRatingsByPassengerId(@PathVariable UUID id) {

@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class RideController {
 
     private final RideService rideService;
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER')")
     @Operation(description = "Retrieving rides history for a passenger")
     @GetMapping(Constants.HISTORY_MAPPING)
     public AllRidesResponse findAllPassengerRides(@RequestParam(required = false, defaultValue = GlobalConstants.DEFAULT_PAGE) Integer page,
@@ -58,6 +60,7 @@ public class RideController {
         return rideService.getById(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(description = "Removing a ride")
     @DeleteMapping(Constants.ID_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -65,6 +68,7 @@ public class RideController {
         rideService.deleteById(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER', 'ROLE_ADMIN')")
     @Operation(description = "Create a ride")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -72,17 +76,21 @@ public class RideController {
         return rideService.save(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
     @Operation(description = "Change ride payment status", hidden = true)
     @PostMapping(Constants.ID_STATUS_MAPPING)
     public RideInfoResponse changeStatus(@PathVariable UUID id) {
         return rideService.changePaymentStatus(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
     @Operation(description = "Ride rejection")
     @PutMapping(Constants.ID_REJECT_MAPPING)
     public MessageResponse rejectRide(@PathVariable UUID id) {
         return rideService.rejectRide(id);
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
 
     @Operation(description = "Start ride")
     @PutMapping(Constants.ID_START_MAPPING)
@@ -90,6 +98,7 @@ public class RideController {
         return rideService.startRide(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
     @Operation(description = "Finish ride")
     @PutMapping(Constants.ID_FINISH_MAPPING)
     public MessageResponse finishRide(@PathVariable UUID id) {

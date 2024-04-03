@@ -6,15 +6,15 @@ networks:
     driver: bridge
 
 services:
-  db-passengers:
-    image: postgres:latest
-    container_name: db-passengers
-    ports:
-      - "5444:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: passengers
+#  db-passengers:
+#    image: postgres:latest
+#    container_name: db-passengers
+#    ports:
+#      - "5444:5432"
+#    environment:
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_DB: passengers
   db-drivers:
     image: postgres:latest
     container_name: db-drivers
@@ -24,50 +24,51 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: drivers
-  db-rides:
-    image: postgres:latest
-    container_name: db-rides
-    ports:
-      - "5446:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: rides
-  db-payments:
-    image: postgres:latest
-    container_name: db-payments
-    ports:
-      - "5447:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: payments
-  zookeeper:
-    image: wurstmeister/zookeeper:latest
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ALLOW_ANONYMOUS_LOGIN: yes
-  kafka:
-    container_name: kafka
-    image: wurstmeister/kafka:latest
-    ports:
-       - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      ALLOW_PLAINTEXT_LISTENER: yes
-    depends_on:
-      - zookeeper
+#  db-rides:
+#    image: postgres:latest
+#    container_name: db-rides
+#    ports:
+#      - "5446:5432"
+#    environment:
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_DB: rides
+#  db-payments:
+#    image: postgres:latest
+#    container_name: db-payments
+#    ports:
+#      - "5447:5432"
+#    environment:
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_DB: payments
+#  zookeeper:
+#    image: wurstmeister/zookeeper:latest
+#    container_name: zookeeper
+#    ports:
+#      - "2181:2181"
+#    environment:
+#      ALLOW_ANONYMOUS_LOGIN: yes
+#  kafka:
+#    container_name: kafka
+#    image: wurstmeister/kafka:latest
+#    ports:
+#       - "9092:9092"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_LISTENERS: PLAINTEXT://:9092
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+#      ALLOW_PLAINTEXT_LISTENER: yes
+#    depends_on:
+#      - zookeeper
   api-gateway:
     container_name: api-gateway
     build:
       context: ./api-gateway
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://keycloak:8080/realms/taxi-realm
     ports:
       - "8080:8080"
     depends_on:
@@ -92,49 +93,61 @@ services:
     depends_on:
       - discovery-server
       - db-drivers
-  notification-service:
-    container_name: notification-service
-    build:
-      context: ./notification-service
+#  notification-service:
+#    container_name: notification-service
+#    build:
+#      context: ./notification-service
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#    depends_on:
+#      - discovery-server
+#      - kafka
+#  passenger-service:
+#    container_name: passenger-service
+#    build:
+#      context: ./passenger-service
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db-passengers/passengers
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#    depends_on:
+#      - discovery-server
+#      - db-passengers
+#  payment-service:
+#    container_name: payment-service
+#    build:
+#      context: ./payment-service
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db-payments/payments
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#    depends_on:
+#      - discovery-server
+#      - db-payments
+#  ride-service:
+#    container_name: ride-service
+#    build:
+#      context: ./ride-service
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db-rides/rides
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#    depends_on:
+#      - discovery-server
+#      - db-rides
+#      - kafka
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.2
+    container_name: keycloak
     environment:
-      SPRING_PROFILES_ACTIVE: docker
-    depends_on:
-      - discovery-server
-      - kafka
-  passenger-service:
-    container_name: passenger-service
-    build:
-      context: ./passenger-service
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db-passengers/passengers
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      - discovery-server
-      - db-passengers
-  payment-service:
-    container_name: payment-service
-    build:
-      context: ./payment-service
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db-payments/payments
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      - discovery-server
-      - db-payments
-  ride-service:
-    container_name: ride-service
-    build:
-      context: ./ride-service
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db-rides/rides
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      - discovery-server
-      - db-rides
-      - kafka
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes/custom/login
+    command:
+      - start-dev
+    ports:
+      - "8181:8080"

@@ -8,13 +8,14 @@ import com.modsen.cabaggregator.driverservice.dto.DriverResponse;
 import com.modsen.cabaggregator.driverservice.exception.DriverNotFoundException;
 import com.modsen.cabaggregator.driverservice.model.Driver;
 import com.modsen.cabaggregator.driverservice.model.enumeration.DriverStatus;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.UUID;
 
 public interface DriverService {
     AllDriversResponse findAll(Integer page, Integer size, DriverSortCriteria sort);
 
-    DriverResponse save(CreateDriverRequest createDriverRequest);
+    DriverResponse save(OAuth2User principal);
 
     void delete(UUID id);
 

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class PromoCodeController {
         return promoService.findAll(page, size);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(description = "Create promo code")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -47,6 +49,7 @@ public class PromoCodeController {
         return promoService.create(request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(description = "Update promo code")
     @PutMapping(Constants.NAME_MAPPING)
     public PromoCodeResponse updatePromo(@PathVariable String name,
@@ -54,6 +57,7 @@ public class PromoCodeController {
         return promoService.update(name, request);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @Operation(description = "Delete promotional code")
     @DeleteMapping(Constants.NAME_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)

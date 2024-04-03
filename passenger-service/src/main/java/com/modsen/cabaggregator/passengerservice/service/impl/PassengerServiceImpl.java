@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +59,8 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     @Transactional
-    public PassengerResponse save(CreatePassengerRequest request) {
+    public PassengerResponse save(OAuth2User principal) {
+        CreatePassengerRequest request = createRequestFromPrincipal(principal);
         validateUniqueData(request);
 
         final String email = request.getEmail().toLowerCase();
@@ -117,6 +119,19 @@ public class PassengerServiceImpl implements PassengerService {
         if (!passengerRepository.existsById(passengerId)) {
             throw new PassengerNotFoundException(String.format(PASSENGER_WAS_NOT_FOUND, passengerId));
         }
+    }
+
+    private CreatePassengerRequest createRequestFromPrincipal(OAuth2User principal) {
+        String phone = principal.getAttribute("phone");
+        String username = principal.getAttribute("username");
+        String surname = principal.getAttribute("surname");
+        String email = principal.getAttribute("email");
+        return CreatePassengerRequest.builder()
+                .name(username)
+                .surname(surname)
+                .email(email)
+                .phone(phone)
+                .build();
     }
 
     private void createCustomer(CreatePassengerRequest request, UUID passengerId) {

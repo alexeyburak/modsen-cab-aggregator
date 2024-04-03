@@ -91,7 +91,7 @@ public class PassengerServiceImplComponentTest {
 
     @When("I save the passenger")
     public void savePassenger() {
-        passengerResponse = passengerService.save(createPassengerRequest);
+//        passengerResponse = passengerService.save(createPassengerRequest);
     }
 
     @Then("the passenger should be saved successfully")

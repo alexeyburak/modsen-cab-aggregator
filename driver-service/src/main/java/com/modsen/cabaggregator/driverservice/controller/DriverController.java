@@ -16,6 +16,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,13 +55,15 @@ public class DriverController {
         return driverService.findAll(page, size, sort);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER')")
     @Operation(description = "Add new driver")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DriverResponse save(@RequestBody @Valid CreateDriverRequest request) {
-        return driverService.save(request);
+    public DriverResponse save(@AuthenticationPrincipal OAuth2User principal) {
+        return driverService.save(principal);
     }
 
+    @PreAuthorize("(hasRole('ROLE_DRIVER') && #id == authentication.principal.id) || hasRole('ROLE_ADMIN')")
     @Operation(description = "Delete driver")
     @DeleteMapping(Constants.ID_MAPPING)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -78,12 +83,14 @@ public class DriverController {
         return driverService.findAvailableById();
     }
 
+    @PreAuthorize("(hasRole('ROLE_DRIVER') && #id == authentication.principal.id) || hasRole('ROLE_ADMIN')")
     @Operation(description = "Update driver status by ID")
     @PutMapping(Constants.ID_MAPPING + Constants.STATUS_MAPPING)
     public DriverResponse updateStatus(@PathVariable UUID id, @RequestParam DriverStatus status) {
         return driverService.updateStatus(id, status);
     }
 
+    @PreAuthorize("(hasRole('ROLE_DRIVER') && #id == authentication.principal.id) || hasRole('ROLE_ADMIN')")
     @Operation(description = "Update driver by ID")
     @PutMapping(Constants.ID_MAPPING)
     public DriverResponse update(@PathVariable UUID id,

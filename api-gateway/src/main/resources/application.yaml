@@ -1,6 +1,29 @@
 spring:
   application:
     name: api-gateway
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: taxi-realm
+            client-secret: ${REALM-SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+            scope: openid
+        provider:
+          keycloak:
+            token-uri: http://localhost:8181/realms/taxi-realm/protocol/openid-connect/token
+            authorization-uri: http://localhost:8181/realms/taxi-realm/protocol/openid-connect/auth
+            user-name-attribute: preferred_username
+            user-info-uri: http://localhost:8181/realms/taxi-realm/protocol/openid-connect/userinfo
+            jwk-set-uri: http://localhost:8181/realms/taxi-realm/protocol/openid-connect/certs
+            user-info-authentication-method: header
+      resourceserver:
+        jwt:
+          issuer-uri: https://localhost:8181/realms/taxi-realm
+          jwk-set-uri: http://localhost:8181/realms/taxi-realm/protocol/openid-connect/certs
   cloud:
     gateway:
       routes:

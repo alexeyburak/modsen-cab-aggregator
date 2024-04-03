@@ -7,13 +7,14 @@ import com.modsen.cabaggregator.passengerservice.dto.UpdatePassengerRequest;
 import com.modsen.cabaggregator.passengerservice.dto.PassengerResponse;
 import com.modsen.cabaggregator.passengerservice.exception.PassengerNotFoundException;
 import com.modsen.cabaggregator.passengerservice.model.Passenger;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.UUID;
 
 public interface PassengerService {
     AllPassengersResponse findAll(Integer page, Integer size, PassengerSortCriteria sort);
 
-    PassengerResponse save(CreatePassengerRequest passengerDTO);
+    PassengerResponse save(OAuth2User principal);
 
     void delete(UUID id);
 

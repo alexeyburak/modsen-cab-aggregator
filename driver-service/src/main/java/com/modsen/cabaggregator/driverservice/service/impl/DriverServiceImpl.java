@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,16 +52,17 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     @Transactional
-    public DriverResponse save(CreateDriverRequest createDriverRequest) {
-        final String phone = createDriverRequest.getPhone();
+    public DriverResponse save(OAuth2User principal) {
+        CreateDriverRequest request = createRequestFromPrincipal(principal);
+        final String phone = request.getPhone();
         throwExceptionIfPhoneExists(phone);
 
         log.info("Save driver. Phone: {}", phone);
         return driverMapper.toDriverResponse(
                 driverRepository.save(
                         Driver.builder()
-                                .name(createDriverRequest.getName())
-                                .surname(createDriverRequest.getSurname())
+                                .name(request.getName())
+                                .surname(request.getSurname())
                                 .phone(phone)
                                 .status(DriverStatus.AVAILABLE)
                                 .active(true)
@@ -132,6 +134,20 @@ public class DriverServiceImpl implements DriverService {
                         driverRepository.save(driver)
                 )
         );
+    }
+
+    private CreateDriverRequest createRequestFromPrincipal(OAuth2User principal) {
+        String phone = principal.getAttribute("phone");
+        String username = principal.getAttribute("username");
+        String surname = principal.getAttribute("surname");
+//        if (phone == null || username == null || !phone.matches(PatternList.PHONE_PATTERN)) {
+//            throw new KeycloakUserIsNotValid();
+//        }
+        return CreateDriverRequest.builder()
+                .name(username)
+                .surname(surname)
+                .phone(phone)
+                .build();
     }
 
     private void updateDriverInfo(UpdateDriverRequest request, Driver driver) {
