@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 spring:
   application:
     name: passenger-service
@@ -49,3 +49,16 @@ eureka:
   instance:
     leaseRenewalIntervalInSeconds: 5
     leaseExpirationDurationInSeconds: 5
+management:
+  endpoint.health.show-details: "ALWAYS"
+  endpoints.web.exposure.include: "*"
+  tracing:
+    enabled: true
+    sampling:
+      probability: 0.5
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{traceId:-},%X{spanId:-}]"
